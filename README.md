@@ -1,6 +1,6 @@
 # Wasteback Machine
 
-[![NPM version](https://img.shields.io/npm/v/wasteback-machine.svg)](https://www.npmjs.com/package/wasteback-machine)
+[![NPM version](https://img.shields.io/npm/v/wasteback-machine.svg)](https://www.npmjs.com/package/@overbrowsing/wasteback-machine)
 [![npm](https://img.shields.io/npm/dt/wasteback-machine.svg)](https://www.npmtrends.com/wasteback-machine)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github)
 
