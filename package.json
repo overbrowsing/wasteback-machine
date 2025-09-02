@@ -1,5 +1,5 @@
 {
-  "name": "@overbrowsing/wasteback-machine",
+  "name": "wasteback-machine",
   "version": "1.0.0",
   "description": "Measure the environmental impact of the past web.",
   "main": "src/wasteback-machine.js",

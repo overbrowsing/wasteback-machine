@@ -26,7 +26,7 @@ Most page analysis tools are strictly contemporary, ignoring historical context.
 To install Wasteback Machine as a dependency for your projects using NPM.
 
 ```sh
-npm install @overbrowsing/wasteback-machine
+npm install wasteback-machine
 ```
 
 ### From Source
@@ -49,7 +49,7 @@ Wasteback Machine provides two main functions:
 ### 1. Fetch Available Snapshots
 
 ```javascript
-import { getSnapshots } from "@overbrowsing/wasteback-machine";
+import { getSnapshots } from "./src/wasteback-machine";
 
 // Get all snapshots for a URL between 2012 and 2025
 const snapshots = await getSnapshots('https://example.com', 2012, 2025);
@@ -65,7 +65,7 @@ console.log(snapshots);
 ### 2. Analyse a Specific Snapshot
 
 ```javascript
-import { getSnapshotSizes } from "@overbrowsing/wasteback-machine";
+import { getSnapshotSizes } from "./src/wasteback-machine";
 
 // Analyse a specific snapshot
 const snapshotData = await getSnapshotSizes('https://example.com', '20120101123456');
