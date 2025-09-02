@@ -16,14 +16,14 @@ Most page analysis tools are strictly contemporary, ignoring historical context.
 
 - **Retrieve snapshots by date or timespan:** Selects the nearest snapshot if the exact timestamp is missing.
 - **Analyse page composition:** Measure sizes of HTML, CSS, JS, images, videos, fonts and other resources.
-- **Generate detailed asset lists:** Includes URLs, types, and sizes of all page assets.  
+- **Generate detailed asset lists:** Includes URLs, types, and sizes of all page assets.
 - **Retrieval completeness score:** See what percentage of a snapshot was successfully retrieved.
 
 ## Installation
 
 ### Using NPM
 
-To install Wasteback Machine as a dependency for your projects using NPM.
+To install Wasteback Machine as a dependency for your projects using NPM:
 
 ```sh
 npm install @overbrowsing/wasteback-machine
@@ -41,9 +41,9 @@ npm install
 
 ## Usage
 
-Wasteback Machine provides two main functions:  
+Wasteback Machine provides two main functions:
 
-1. Discover available snapshots for a URL in a given time range.  
+1. Discover available snapshots for a URL in a given time range.
 2. Analyse a specific snapshot for page size and composition.
 
 ### 1. Fetch Available Snapshots
@@ -114,7 +114,7 @@ The demo allows you to:
   - Estimated CO₂e per type
   - Percentage of total page size
 
-### Run the Demo 
+### Run the Demo
 
 Run the demo with Node.js:
 
