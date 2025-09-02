@@ -79,7 +79,7 @@ console.log(snapshotData);
   "url": "https://example.com",
   "requestedSnapshot": "20120101123456",
   "snapshot": "20120101123456",
-  "archiveUrl": "https://web.archive.org/web/20120101123456if_/https://example.com",
+  "archiveUrl": "https://web.archive.org/web/20120101123456/https://example.com",
   "sizes": {
     "html": { "bytes": 12345, "count": 1 },
     "css": { "bytes": 54321, "count": 2 },
