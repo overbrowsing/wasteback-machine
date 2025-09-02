@@ -1,5 +1,5 @@
 /**
- * Wasteback Machine v1.0.0
+ * Wasteback Machine v1.0.2
  * Measure the environmental impact of the past web
  *
  * Author: Overbrowsing Research Group
@@ -7,7 +7,6 @@
  * License: Apache 2.0
  */
 
-import fetch from "node-fetch";
 import { JSDOM } from "jsdom";
 
 // Fetch with retry logic to handle flaky Wayback Machine requests
