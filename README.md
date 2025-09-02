@@ -26,7 +26,7 @@ Most page analysis tools are strictly contemporary, ignoring historical context.
 To install Wasteback Machine as a dependency for your projects using NPM.
 
 ```sh
-npm install wasteback-machine
+npm install @overbrowsing/wasteback-machine
 ```
 
 ### From Source
