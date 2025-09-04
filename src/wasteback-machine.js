@@ -1,5 +1,5 @@
 /**
- * Wasteback Machine v1.0.3
+ * Wasteback Machine v1.0.4
  * Measure the environmental impact of the past web
  *
  * Author: Overbrowsing Research Group
@@ -97,14 +97,14 @@ async function getSize(url, hintedType = "") {
       text = text
         .replace(/\/\*\s*FILE ARCHIVED ON[\s\S]*?\*\//gi, "")
         .replace(/\/\*\s*playback timings[\s\S]*?\*\//gi, "");
-      return { size: new TextEncoder().encode(text).length, contentType };
+      return { size: new TextEncoder().encode(text).length, contentType, ok: true };
     }
 
     const buf = await res.arrayBuffer();
-    return { size: buf.byteLength, contentType };
+    return { size: buf.byteLength, contentType, ok: true };
   } catch (err) {
     console.warn(`Failed to fetch ${url}: ${err.message}`);
-    return { size: 0, contentType: "" };
+    return null;
   }
 }
 
@@ -157,14 +157,11 @@ function closestSnapshot(snapshots, target) {
 
 // Get asset URLs for a snapshot
 async function getAssetUrls(url, datetime) {
-
-  // HTML fetched using the 'id_' API flag, which replays the unmodified snapshot
   const htmlUrl = `https://web.archive.org/web/${datetime}id_/${url}`;
   const htmlRes = await fetchWithRetry(htmlUrl);
   const html = await htmlRes.text();
   const htmlSize = new TextEncoder().encode(html).length;
 
-  // Assets fetched using the 'if_' API flag, which hides the Wayback Machine toolbar when replaying a snapshot
   const ifUrl = `https://web.archive.org/web/${datetime}if_/${url}`;
   const ifRes = await fetchWithRetry(ifUrl);
   const dom = new JSDOM(await ifRes.text());
@@ -220,13 +217,16 @@ async function getAssetUrls(url, datetime) {
 
 // Fetch sizes for all assets in parallel
 async function fetchAssetSizes(assets) {
-  return Promise.all(
+  const results = await Promise.all(
     assets.map(async a => {
-      const { size, contentType } = await getSize(a.url);
+      const result = await getSize(a.url);
+      if (!result) return { ok: false }; // 🚨 mark failed
+      const { size, contentType } = result;
       const type = detectAssetType(a.tag, a.url, a.el, contentType);
-      return { url: a.url, type, size };
+      return { url: a.url, type, size, ok: true };
     })
   );
+  return results;
 }
 
 // Get snapshot sizes and composition breakdown
@@ -240,7 +240,7 @@ export async function getSnapshotSizes(
 
   const validDatetime = snapshots.includes(datetime) ? datetime : closestSnapshot(snapshots, datetime);
   const { htmlSize, assets } = await getAssetUrls(url, validDatetime);
-  const assetSizes = await fetchAssetSizes(assets);
+  const assetResults = await fetchAssetSizes(assets);
 
   const sizeData = {
     html: { bytes: htmlSize, count: 1 },
@@ -256,7 +256,12 @@ export async function getSnapshotSizes(
     total: { bytes: htmlSize, count: 1 }
   };
 
-  assetSizes.forEach(({ type, size }) => {
+  let retrievedCount = 0;
+
+  assetResults.forEach(result => {
+    if (!result.ok) return;
+    retrievedCount++;
+    let { type, size } = result;
     if (!sizeData[type]) type = "other";
     sizeData[type].bytes += size;
     sizeData[type].count += 1;
@@ -264,10 +269,7 @@ export async function getSnapshotSizes(
     sizeData.total.count += 1;
   });
 
-  // Calculate completeness as a percentage
-  const completenessRatio = sizeData.total.count > 0
-    ? (sizeData.total.count - sizeData.other.count) / sizeData.total.count
-    : 0;
+  const completenessRatio = assets.length > 0 ? retrievedCount / assets.length : 1;
   const completeness = `${Math.round(completenessRatio * 100)}%`;
 
   return {
@@ -277,6 +279,6 @@ export async function getSnapshotSizes(
     archiveUrl: `https://web.archive.org/web/${validDatetime}/${url}`,
     sizes: sizeData,
     completeness,
-    ...(includeAssets ? { assets: assetSizes } : {})
+    ...(includeAssets ? { assets: assetResults } : {})
   };
 }
