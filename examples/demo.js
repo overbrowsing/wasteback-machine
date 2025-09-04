@@ -15,18 +15,17 @@ function question(prompt) {
 
 // Ensure the URL has a valid scheme (if https:// is missing)
 function normalizeUrl(url) {
-  if (!/^https?:\/\//i.test(url)) {
-    return `https://${url}`;
-  }
-  return url;
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
 }
 
 // Convert snapshot timestamp into a readable YYYY-MM-DD format
 function formatSnapshot(ts) {
-  const year = ts.slice(0, 4);
-  const month = ts.slice(4, 6);
-  const day = ts.slice(6, 8);
-  return `${year}-${month}-${day}`;
+  return `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}`;
+}
+
+// Build a Internet Archive's Wayback Machine timestamp (YYYYMMDDhhmmss) from year, month, day
+function buildTimestamp(year, month = "01", day = "01") {
+  return `${year}${month.padStart(2, "0")}${day.padStart(2, "0")}`.padEnd(14, "0");
 }
 
 // Main execution block
@@ -37,36 +36,19 @@ function formatSnapshot(ts) {
     if (!url) throw new Error("No URL provided.");
     url = normalizeUrl(url);
 
-    // Prompt for year, ensuring it's valid and not before Wayback’s start year
+    // Prompt for year, ensuring it's valid and not before the Internet Archive started archiving websites (1996)
     const yearInput = await question("Enter year (YYYY): ");
     const year = parseInt(yearInput);
-    if (isNaN(year) || year < 1996) throw new Error("Invalid year."); // 1996 is when the Wayback Machine started archiving
+    if (isNaN(year) || year < 1996) throw new Error("Invalid year.");
 
-    // Prompt for optional month, defaulting to "01"
-    const monthInput = await question("Enter month (MM, optional): ");
-    let targetTimestamp = `${year}`;
-    if (monthInput) {
-      const month = monthInput.padStart(2, "0");
-      targetTimestamp += month;
-    } else {
-      targetTimestamp += "01";
-    }
+    // Prompt for optional month and day, defaulting to "01"
+    const month = (await question("Enter month (MM, optional): ")) || "01";
+    const day = (await question("Enter day (DD, optional): ")) || "01";
+    const targetTimestamp = buildTimestamp(year, month, day);
 
-    // Prompt for optional day, defaulting to "01"
-    const dayInput = await question("Enter day (DD, optional): ");
-    if (dayInput) {
-      const day = dayInput.padStart(2, "0");
-      targetTimestamp += day;
-    } else {
-      targetTimestamp += "01";
-    }
+    console.log(`Fetching snapshots for ${url} in ${year}-${month}-${day}...`);
 
-    // Pad timestamp to match Wayback’s full format (YYYYMMDDhhmmss)
-    targetTimestamp = targetTimestamp.padEnd(14, "0");
-
-    console.log(`Fetching snapshots for ${url} in ${year}${monthInput ? "-" + monthInput : ""}${dayInput ? "-" + dayInput : ""}...`);
-
-    // Fetch snapshots from the Wayback Machine
+    // Fetch snapshots from the Internet Archive's Wayback Machine
     const snapshots = await getSnapshots(url, year, year);
     if (!snapshots.length) {
       console.log("No snapshots found.");
@@ -80,12 +62,17 @@ function formatSnapshot(ts) {
         ? curr
         : prev
     );
-    console.log(`Closest snapshot: ${formatSnapshot(closest)}\n`);
+
+    // Build Internet Archive's Wayback Machine snapshot URL
+    const snapshotUrl = `https://web.archive.org/web/${closest}/${url}`;
+
+    console.log(`Closest snapshot: ${formatSnapshot(closest)}`);
+    console.log(`Snapshot URL: ${snapshotUrl}\n`);
 
     // Fetch page composition and size breakdown for that snapshot
     const result = await getSnapshotSizes(url, closest, { startYear: year, endYear: year });
 
-    // Calculate total page weight and estimated CO₂e emissions
+    // Calculate total page size and estimated CO₂e emissions
     const totalBytes = result.sizes.total.bytes;
     const totalKB = (totalBytes / 1024).toFixed(2);
     const oneByte = new co2({ model: "1byte" });
@@ -93,17 +80,19 @@ function formatSnapshot(ts) {
 
     // Display summary results
     console.log("\nPage Size Results:\n");
+    console.log(`🔗 Snapshot URL:    ${snapshotUrl}`);
     console.log(`📊 Data Transfer:   ${totalKB} KB`);
     console.log(`🌍 Page CO₂e:       ${gramsCO2.toFixed(3)} g`);
-    console.log(`✅ Completeness:    ${result.completeness}\n`);
+    console.log(`✅ Completeness:    ${result.completeness}`);
 
     // Display composition breakdown by resource type (JS, CSS, images, etc.)
-    console.log("Page Composition Results:\n");
+    console.log("\nPage Composition Results:\n");
 
     const total = result.sizes.total.bytes;
 
     for (const [type, data] of Object.entries(result.sizes)) {
       if (type === "total") continue;
+      if (!data.count || data.bytes === 0) continue;
 
       const sizeKB = (data.bytes / 1024).toFixed(2);
       const percent = ((data.bytes / total) * 100).toFixed(1);
