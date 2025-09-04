@@ -57,8 +57,13 @@ console.log(snapshots);
 ```javascript
 import { getSnapshotSizes } from "@overbrowsing/wasteback-machine";
 
-// Analyse a specific snapshot
-const snapshotData = await getSnapshotSizes('https://example.com', '20120101123456', { includeAssets: true });
+// Analyse a specific snapshot (includeAssets is optional)
+const snapshotData = await getSnapshotSizes(
+  'https://example.com',
+  '20120101123456',
+  { includeAssets: true } // optional: set to true to include full asset list
+);
+console.log(snapshotData);
 ```
 
 ### Example Output:
