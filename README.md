@@ -58,8 +58,7 @@ console.log(snapshots);
 import { getSnapshotSizes } from "@overbrowsing/wasteback-machine";
 
 // Analyse a specific snapshot
-const snapshotData = await getSnapshotSizes('https://example.com', '20120101123456');
-console.log(snapshotData);
+const snapshotData = await getSnapshotSizes('https://example.com', '20120101123456', { includeAssets: true });
 ```
 
 ### Example Output:
@@ -76,11 +75,14 @@ console.log(snapshotData);
     "js": { "bytes": 1024, "count": 1 },
     "image": { "bytes": 500000, "count": 5 },
     "video": { "bytes": 0, "count": 0 },
+    "audio": { "bytes": 0, "count": 0 },
     "font": { "bytes": 0, "count": 0 },
+    "flash": { "bytes": 0, "count": 0 },
+    "plugin": { "bytes": 0, "count": 0 },
     "other": { "bytes": 0, "count": 0 },
     "total": { "bytes": 563690, "count": 9 }
   },
-  "completeness": 89%,
+  "completeness": "89%",
   "assets": [
     { "url": "https://web.archive.org/web/20120101123456js_/script.js", "type": "js", "size": 1024 },
     { "url": "https://web.archive.org/web/20120101123456im_/image.png", "type": "image", "size": 250000 }
