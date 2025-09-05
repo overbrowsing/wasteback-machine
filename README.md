@@ -29,6 +29,12 @@ To install Wasteback Machine as a dependency for your projects using NPM:
 npm install @overbrowsing/wasteback-machine
 ```
 
+### Using Yarn
+
+```sh
+yarn add @overbrowsing/wasteback-machine
+```
+
 ## Usage
 
 Wasteback Machine provides two main functions:
@@ -107,7 +113,7 @@ The demo allows you to:
   - Completeness of retrieval
 - View a breakdown of all assets including:
   - Number of files
-  - Size in KB and percentage of total page size
+  - Size (KB) and percentage of total page size
   - Estimated CO₂e per type
 
 ### Run the Demo
@@ -120,11 +126,10 @@ node examples/demo.js
 
 ## Method
 
-A technical paper on the Wasteback Machine methodology is currently being prepared. Until it is published, please contact overbrowsing@ed.ac.uk for more information.
+A paper on the Wasteback Machine method is currently being prepared. Until it is published, please contact overbrowsing@ed.ac.uk for more information.
 
-## Disclaimer
-
-Because web archives are inherently ephemeral, Wasteback Machine outputs should be treated as indicative, highlighting relative growth trends in page size and composition over time rather than providing exact measurements. Estimates of environmental impact are likewise approximate. Users should base any claims only on evidence that can be supported and ensure that any formal reporting or use of results is reviewed by a qualified professional. Misleading sustainability claims (greenwashing) can cause harm and may carry legal or reputational risks. The authors and contributors accept no responsibility for how this software, its outputs, or any findings derived from it are used.
+> [!IMPORTANT]  
+> Wasteback Machine outputs are indicative, not exact, showing relative trends over time. Environmental impact estimates are approximate. Users should verify any claims with evidence and consult qualified professionals for formal reporting. The authors are not responsible for how the software, its outputs, or derived findings are used.
 
 ## Contributing
 
