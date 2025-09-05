@@ -220,7 +220,7 @@ async function fetchAssetSizes(assets) {
   const results = await Promise.all(
     assets.map(async a => {
       const result = await getSize(a.url);
-      if (!result) return { ok: false }; // 🚨 mark failed
+      if (!result) return { ok: false };
       const { size, contentType } = result;
       const type = detectAssetType(a.tag, a.url, a.el, contentType);
       return { url: a.url, type, size, ok: true };
