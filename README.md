@@ -31,6 +31,8 @@ npm install @overbrowsing/wasteback-machine
 
 ### Using Yarn
 
+To install Wasteback Machine as a dependency for your projects using Yarn:
+
 ```sh
 yarn add @overbrowsing/wasteback-machine
 ```
@@ -52,7 +54,7 @@ const snapshots = await getSnapshots('https://example.com', 2012, 2025);
 console.log(snapshots);
 ```
 
-### Example Output
+Example Output:
 
 ```javascript
 ["20120101123456", "20120615120000", "20121231180000"]
@@ -72,7 +74,7 @@ const snapshotData = await getSnapshotSizes(
 console.log(snapshotData);
 ```
 
-### Example Output:
+Example Output:
 
 ```js
 {
