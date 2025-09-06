@@ -130,6 +130,8 @@ node examples/demo.js
 
 A paper on the Wasteback Machine method is currently being prepared. Until it is published, please contact overbrowsing@ed.ac.uk for more information.
 
+## Disclaimer 
+
 > [!IMPORTANT]  
 > Wasteback Machine outputs are indicative, not exact, showing relative trends over time. Environmental impact estimates are approximate. Users should verify any claims with evidence and consult qualified professionals for formal reporting. The authors are not responsible for how the software, its outputs, or derived findings are used.
 
