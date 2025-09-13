@@ -83,22 +83,24 @@ Example Output:
   "snapshot": "20120101123456",
   "archiveUrl": "https://web.archive.org/web/20120101123456/https://example.com",
   "sizes": {
-    "html": { "bytes": 12345, "count": 1 },
-    "css": { "bytes": 54321, "count": 2 },
-    "js": { "bytes": 1024, "count": 1 },
-    "image": { "bytes": 500000, "count": 5 },
-    "video": { "bytes": 0, "count": 0 },
-    "audio": { "bytes": 0, "count": 0 },
-    "font": { "bytes": 0, "count": 0 },
-    "flash": { "bytes": 0, "count": 0 },
+    "html": { "bytes": 15432, "count": 1 },
+    "css": { "bytes": 67890, "count": 3 },
+    "js": { "bytes": 24576, "count": 4 },
+    "image": { "bytes": 1048576, "count": 8 },
+    "video": { "bytes": 2097152, "count": 2 },
+    "audio": { "bytes": 512000, "count": 2 },
+    "font": { "bytes": 102400, "count": 2 },
+    "flash": { "bytes": 40960, "count": 1 },
     "plugin": { "bytes": 0, "count": 0 },
-    "other": { "bytes": 0, "count": 0 },
-    "total": { "bytes": 563690, "count": 9 }
+    "data": { "bytes": 20480, "count": 2 },
+    "other": { "bytes": 8192, "count": 1 },
+    "total": { "bytes": 4196358, "count": 26 }
   },
-  "completeness": "89%",
+  "completeness": "92%",
   "assets": [
-    { "url": "https://web.archive.org/web/20120101123456js_/script.js", "type": "js", "size": 1024 },
-    { "url": "https://web.archive.org/web/20120101123456im_/image.png", "type": "image", "size": 250000 }
+    { "url": "https://web.archive.org/web/20120101123456js_/script.js", "type": "js", "size": 10240 },
+    { "url": "https://web.archive.org/web/20120101123456js_/analytics.js", "type": "js", "size": 14336 },
+    ...
   ]
 }
 ```
