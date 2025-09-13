@@ -1,5 +1,5 @@
 /**
- * Wasteback Machine v1.0.6
+ * Wasteback Machine v1.0.7
  * Measure the environmental impact of the past web
  *
  * Author: Overbrowsing Research Group
@@ -9,7 +9,7 @@
 
 import { JSDOM } from "jsdom";
 
-// Fetch with retry logic to handle flaky Wayback Machine requests
+// Fetch with retry logic to handle flaky requests
 async function fetchWithRetry(url, options = {}, retries = 3) {
   let error;
   for (let attempt = 0; attempt < retries; attempt++) {
@@ -91,7 +91,7 @@ function extractSrcsetUrls(srcset = "") {
     .filter(Boolean);
 }
 
-// Extract resources from JavaScripts to catch dynamically referenced assets
+// Extract resources from JavaScript files to catch dynamically referenced assets
 function extractUrlsFromJS(jsText) {
   const urls = [];
   const regex = /['"`](https?:\/\/[^'"`]+?)['"`]/g;
