@@ -49,7 +49,7 @@ Wasteback Machine provides two main functions:
 ```javascript
 import { getSnapshots } from "@overbrowsing/wasteback-machine";
 
-// Get all snapshots for www.nytimes.com between 2012 and 2025
+// Get all snapshots for www.nytimes.com between 1996 and 2025
 const snapshots = await getSnapshots('https://nytimes.com', 1996, 2025);
 console.log(snapshots);
 ```
