@@ -1,5 +1,5 @@
 /**
- * Wasteback Machine v1.0.5
+ * Wasteback Machine v1.0.6
  * Measure the environmental impact of the past web
  *
  * Author: Overbrowsing Research Group
@@ -25,29 +25,30 @@ async function fetchWithRetry(url, options = {}, retries = 3) {
   throw error;
 }
 
-// Asset type registry and MIME/extension classification
+// Asset categories
 const CATEGORIES = [
-  "html", "css", "js", "image", "video", "audio", "font", "flash", "plugin", "other"
+  "html", "css", "js", "image", "video", "audio", "font", "flash", "plugin", "data", "other"
 ];
 
-// Define extensions per category
+// Define asset categories by extension
 const EXT_GROUPS = {
   css: ["css"],
-  js: ["js", "mjs"],
-  image: ["png","jpg","jpeg","gif","webp","avif","bmp","ico","tiff","tif","svg","svgz","apng"],
-  video: ["mp4","webm","ogv","m4v","mkv","3gp","3g2","mov","qt","avi","wmv","asf","flv","rmvb","rm"],
-  audio: ["mp3","wav","ogg","oga","aac","m4a","flac","mid","midi","ra","ram"],
-  font: ["woff","woff2","ttf","otf","eot"],
+  js: ["js","mjs","ts","jsx","tsx"],
+  image: ["png","jpg","jpeg","gif","webp","avif","bmp","ico","tiff","tif","svg","apng","heic","heif","jp2","j2k","dds"],
+  video: ["mp4","webm","ogv","m4v","mkv","mov","avi","flv","m2v","ts","rmvb","rm","f4v","f4p","f4a","f4b"],
+  audio: ["mp3","wav","ogg","oga","aac","m4a","flac","opus","mid","midi","ra","ram","aif","aiff","au"],
+  font: ["woff","woff2","ttf","otf","eot","pfa","pfb"],
   flash: ["swf"],
-  plugin: ["dcr","dir","xap","jar","class","jnlp","unity3d","cab","ocx"]
+  plugin: ["jar","class","xap","unity3d","dcr","dir","cab","ocx"],
+  data: ["json","xml","pdf","zip","tar","7z","wasm","map"]
 };
 
-// Build ext lookup dynamically
 const TYPE_REGISTRY_EXT = Object.fromEntries(
   Object.entries(EXT_GROUPS)
         .flatMap(([cat, exts]) => exts.map(ext => [ext, cat]))
 );
 
+// MIME-based asset classification
 const TYPE_REGISTRY = {
   mime: [
     { test: /^text\/html\b/i, cat: "html" },
@@ -62,21 +63,26 @@ const TYPE_REGISTRY = {
     { test: /^application\/x-director\b/i, cat: "plugin" },
     { test: /^application\/x-silverlight-app\b/i, cat: "plugin" },
     { test: /^(application\/java-archive|application\/x-java-applet)\b/i, cat: "plugin" },
-    { test: /^application\/vnd\.unity\b/i, cat: "plugin" }
+    { test: /^application\/vnd\.unity\b/i, cat: "plugin" },
+    { test: /^application\/json\b/i, cat: "data" },
+    { test: /^application\/wasm\b/i, cat: "data" },
+    { test: /^application\/pdf\b/i, cat: "data" },
+    { test: /^application\/(zip|x-7z-compressed|x-tar|gzip)\b/i, cat: "data" },
+    { test: /^application\/xml\b/i, cat: "data" },
+    { test: /^text\/xml\b/i, cat: "data" },
+    { test: /^text\/map\b/i, cat: "data" }
   ],
   ext: TYPE_REGISTRY_EXT
 };
 
-function classifyByMime(mime) {
-  if (!mime) return null;
-  const rule = TYPE_REGISTRY.mime.find(r => r.test.test(mime));
-  return rule?.cat || null;
-}
-
-function classifyByExtension(url = "") {
-  const clean = url.split("#")[0].split("?")[0].toLowerCase();
-  const ext = clean.includes(".") ? clean.split(".").pop() : "";
-  return TYPE_REGISTRY.ext[ext] || null;
+// Classify assets MIME first, then fallback to extension
+function classifyAsset(url = "", mime = "") {
+  if (mime) {
+    const rule = TYPE_REGISTRY.mime.find(r => r.test.test(mime));
+    if (rule) return rule.cat;
+  }
+  const ext = url.split("?")[0].split("#")[0].toLowerCase().split(".").pop();
+  return TYPE_REGISTRY.ext[ext] || "other";
 }
 
 function extractSrcsetUrls(srcset = "") {
@@ -85,23 +91,33 @@ function extractSrcsetUrls(srcset = "") {
     .filter(Boolean);
 }
 
+// Extract resources from JavaScripts to catch dynamically referenced assets
+function extractUrlsFromJS(jsText) {
+  const urls = [];
+  const regex = /['"`](https?:\/\/[^'"`]+?)['"`]/g;
+  let match;
+  while ((match = regex.exec(jsText)) !== null) {
+    urls.push(match[1]);
+  }
+  return urls;
+}
+
 async function getSize(url, hintedType = "") {
   try {
     const res = await fetchWithRetry(url);
     const contentType = res.headers.get("content-type") || "";
-
-    const finalType = classifyByMime(contentType) || hintedType;
+    const finalType = classifyAsset(url, contentType);
 
     if (finalType === "css" || finalType === "js") {
       let text = await res.text();
       text = text
         .replace(/\/\*\s*FILE ARCHIVED ON[\s\S]*?\*\//gi, "")
         .replace(/\/\*\s*playback timings[\s\S]*?\*\//gi, "");
-      return { size: new TextEncoder().encode(text).length, contentType, ok: true };
+      return { size: new TextEncoder().encode(text).length, contentType, text };
     }
 
     const buf = await res.arrayBuffer();
-    return { size: buf.byteLength, contentType, ok: true };
+    return { size: buf.byteLength, contentType };
   } catch (err) {
     console.warn(`Failed to fetch ${url}: ${err.message}`);
     return null;
@@ -109,21 +125,17 @@ async function getSize(url, hintedType = "") {
 }
 
 function detectAssetType(tag, url = "", el = null, contentType = "") {
-  let cat = classifyByMime(contentType);
-
+  let cat = classifyAsset(url, contentType);
   if (!cat && el) {
     if (tag === "link") {
       const asHint = (el.getAttribute("as") || "").toLowerCase();
       if (CATEGORIES.includes(asHint)) cat = asHint;
     }
-    if (["source", "embed", "object"].includes(tag)) {
+    if (["source","embed","object"].includes(tag)) {
       const t = el.getAttribute("type") || "";
-      cat = classifyByMime(t) || cat;
+      cat = classifyAsset("", t) || cat;
     }
   }
-
-  if (!cat) cat = classifyByExtension(url);
-
   if (!cat) {
     if (tag === "script") cat = "js";
     else if (tag === "link") cat = "css";
@@ -137,10 +149,7 @@ function detectAssetType(tag, url = "", el = null, contentType = "") {
 
 // Get all available snapshots for a URL
 export async function getSnapshots(url, startYear, endYear) {
-  const apiUrl = `https://web.archive.org/cdx/search/cdx?url=${encodeURIComponent(
-    url
-  )}&from=${startYear}&to=${endYear}&output=json&fl=timestamp&filter=statuscode:200`;
-
+  const apiUrl = `https://web.archive.org/cdx/search/cdx?url=${encodeURIComponent(url)}&from=${startYear}&to=${endYear}&output=json&fl=timestamp&filter=statuscode:200`;
   const res = await fetchWithRetry(apiUrl);
   const data = await res.json();
   return data.slice(1).map(row => row[0]).filter(ts => /^\d{14}$/.test(ts));
@@ -155,13 +164,15 @@ function closestSnapshot(snapshots, target) {
   );
 }
 
-// Get asset URLs for a snapshot
+// Extract asset URLs
 async function getAssetUrls(url, datetime) {
+  // HTML fetched using the 'id_' API flag, which replays the unmodified snapshot
   const htmlUrl = `https://web.archive.org/web/${datetime}id_/${url}`;
   const htmlRes = await fetchWithRetry(htmlUrl);
   const html = await htmlRes.text();
   const htmlSize = new TextEncoder().encode(html).length;
 
+  // Assets fetched using the 'if_' API flag, which hides the Wayback Machine toolbar when replaying a snapshot
   const ifUrl = `https://web.archive.org/web/${datetime}if_/${url}`;
   const ifRes = await fetchWithRetry(ifUrl);
   const dom = new JSDOM(await ifRes.text());
@@ -171,14 +182,11 @@ async function getAssetUrls(url, datetime) {
   const pushSafe = (rawUrl, tag, el) => {
     if (!rawUrl) return;
     if (/web-static\.archive\.org/i.test(rawUrl)) return;
-    try {
-      const resolvedUrl = new URL(rawUrl, ifUrl).href;
-      assets.push({ url: resolvedUrl, tag, el });
-    } catch (e) {
-      console.warn(`Skipping malformed asset URL "${rawUrl}": ${e.message}`);
-    }
+    try { assets.push({ url: new URL(rawUrl, ifUrl).href, tag, el }); }
+    catch (e) { console.warn(`Skipping malformed URL "${rawUrl}": ${e.message}`); }
   };
 
+  // Capture standard assets: scripts, styles, images, media, embeds
   doc.querySelectorAll(`
     link[href],
     script[src],
@@ -187,26 +195,21 @@ async function getAssetUrls(url, datetime) {
     source[src],
     source[srcset],
     video[src],
-    video poster,
+    video[poster],
     audio[src],
     iframe[src],
     object[data],
     embed[src]
   `).forEach(el => {
     const tag = el.tagName.toLowerCase();
-
     if (tag === "link") pushSafe(el.getAttribute("href"), tag, el);
     else if (tag === "object") pushSafe(el.getAttribute("data"), tag, el);
     else if (tag === "video") {
       pushSafe(el.getAttribute("src"), tag, el);
       pushSafe(el.getAttribute("poster"), "img", el);
-    } else {
-      pushSafe(el.getAttribute("src"), tag, el);
-    }
+    } else pushSafe(el.getAttribute("src"), tag, el);
 
-    if (el.hasAttribute("srcset")) {
-      extractSrcsetUrls(el.getAttribute("srcset")).forEach(u => pushSafe(u, tag, el));
-    }
+    if (el.hasAttribute("srcset")) extractSrcsetUrls(el.getAttribute("srcset")).forEach(u => pushSafe(u, tag, el));
   });
 
   doc.querySelectorAll('link[rel~="icon"][href], link[rel="apple-touch-icon"][href], link[rel="manifest"][href]')
@@ -215,17 +218,19 @@ async function getAssetUrls(url, datetime) {
   return { htmlSize, assets };
 }
 
-// Fetch sizes for all assets in parallel
+// Fetch asset sizes
 async function fetchAssetSizes(assets) {
-  const results = await Promise.all(
-    assets.map(async a => {
-      const result = await getSize(a.url);
-      if (!result) return { ok: false };
-      const { size, contentType } = result;
-      const type = detectAssetType(a.tag, a.url, a.el, contentType);
-      return { url: a.url, type, size, ok: true };
-    })
-  );
+  const results = [];
+  for (const a of assets) {
+    const result = await getSize(a.url);
+    if (!result) { results.push({ url: a.url, type: "other", size: 0 }); continue; }
+
+    const { size, contentType, text } = result;
+    const type = detectAssetType(a.tag, a.url, a.el, contentType);
+    results.push({ url: a.url, type, size });
+
+    if (text && type === "js") extractUrlsFromJS(text).forEach(u => results.push({ url: u, type: "other", size: 0 }));
+  }
   return results;
 }
 
@@ -242,43 +247,29 @@ export async function getSnapshotSizes(
   const { htmlSize, assets } = await getAssetUrls(url, validDatetime);
   const assetResults = await fetchAssetSizes(assets);
 
-  const sizeData = {
-    html: { bytes: htmlSize, count: 1 },
-    css: { bytes: 0, count: 0 },
-    js: { bytes: 0, count: 0 },
-    image: { bytes: 0, count: 0 },
-    video: { bytes: 0, count: 0 },
-    audio: { bytes: 0, count: 0 },
-    font: { bytes: 0, count: 0 },
-    flash: { bytes: 0, count: 0 },
-    plugin: { bytes: 0, count: 0 },
-    other: { bytes: 0, count: 0 },
-    total: { bytes: htmlSize, count: 1 }
-  };
+  const sizeData = CATEGORIES.reduce((acc, cat) => ({ ...acc, [cat]: { bytes: 0, count: 0 } }), {});
+  sizeData.html = { bytes: htmlSize, count: 1 };
+  sizeData.total = { bytes: htmlSize, count: 1 };
 
-  let retrievedCount = 0;
-
-  assetResults.forEach(result => {
-    if (!result.ok) return;
-    retrievedCount++;
-    let { type, size } = result;
-    if (!sizeData[type]) type = "other";
-    sizeData[type].bytes += size;
-    sizeData[type].count += 1;
+  assetResults.forEach(({ type, size }) => {
+    const t = sizeData[type] ? type : "other";
+    sizeData[t].bytes += size;
+    sizeData[t].count += 1;
     sizeData.total.bytes += size;
     sizeData.total.count += 1;
   });
 
-  const completenessRatio = assets.length > 0 ? retrievedCount / assets.length : 1;
-  const completeness = `${Math.round(completenessRatio * 100)}%`;
+  const completeness = `${Math.round(assets.length ? (assetResults.length / assets.length) * 100 : 100)}%`;
 
-  return {
+  const output = {
     url,
     requestedSnapshot: datetime,
     snapshot: validDatetime,
     archiveUrl: `https://web.archive.org/web/${validDatetime}/${url}`,
     sizes: sizeData,
-    completeness,
-    ...(includeAssets ? { assets: assetResults } : {})
+    completeness
   };
+
+  if (includeAssets) output.assets = assetResults;
+  return output;
 }
