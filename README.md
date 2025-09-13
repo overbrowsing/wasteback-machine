@@ -47,7 +47,7 @@ Wasteback Machine provides two main functions:
 ### 1. Fetch Available Snapshots
 
 ```javascript
-import { getSnapshots } from "@overbrowsing/wasteback-machine.js";
+import { getSnapshots } from "@overbrowsing/src/wasteback-machine";
 
 // Get all snapshots for a URL between 2012 and 2025
 const snapshots = await getSnapshots('https://nytimes.com', 1996, 2025);
@@ -62,10 +62,10 @@ Example Output:
 ]
 ```
 
-### 2. Analyse a Specific Snapshot 
+### 2. Analyse a Specific Snapshot
 
 ```javascript
-import { getSnapshotSizes } from "@overbrowsing/wasteback-machine.js";
+import { getSnapshotSizes } from "@overbrowsing/src/wasteback-machine";
 
 // Analyse a specific snapshot (includeAssets is optional)
 const snapshotData = await getSnapshotSizes(
@@ -141,9 +141,9 @@ node examples/demo.js
 
 A paper on the Wasteback Machine method is currently being prepared. Until it is published, please contact overbrowsing@ed.ac.uk for more information.
 
-## Disclaimer 
+## Disclaimer
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Wasteback Machine outputs are indicative, not exact, showing relative trends over time. Environmental impact estimates are approximate. Users should verify any claims with evidence and consult qualified professionals for formal reporting. The authors are not responsible for how the software, its outputs, or derived findings are used.
 
 ## Contributing
