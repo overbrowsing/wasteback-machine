@@ -47,28 +47,30 @@ Wasteback Machine provides two main functions:
 ### 1. Fetch Available Snapshots
 
 ```javascript
-import { getSnapshots } from "@overbrowsing/wasteback-machine";
+import { getSnapshots } from "@overbrowsing/wasteback-machine.js";
 
 // Get all snapshots for a URL between 2012 and 2025
-const snapshots = await getSnapshots('https://example.com', 2012, 2025);
+const snapshots = await getSnapshots('https://nytimes.com', 1996, 2025);
 console.log(snapshots);
 ```
 
 Example Output:
 
 ```javascript
-["20120101123456", "20120615120000", "20121231180000"]
+[
+  '19961112181513', '19961112181513', '19961112181513', '19961219002950', ...
+]
 ```
 
-### 2. Analyse a Specific Snapshot
+### 2. Analyse a Specific Snapshot 
 
 ```javascript
-import { getSnapshotSizes } from "@overbrowsing/wasteback-machine";
+import { getSnapshotSizes } from "@overbrowsing/wasteback-machine.js";
 
 // Analyse a specific snapshot (includeAssets is optional)
 const snapshotData = await getSnapshotSizes(
-  'https://example.com',
-  '20120101123456',
+  'https://nytimes.com',
+  '19961112181513',
   { includeAssets: true } // optional: set to true to include full asset list
 );
 console.log(snapshotData);
@@ -78,29 +80,36 @@ Example Output:
 
 ```js
 {
-  "url": "https://example.com",
-  "requestedSnapshot": "20120101123456",
-  "snapshot": "20120101123456",
-  "archiveUrl": "https://web.archive.org/web/20120101123456/https://example.com",
-  "sizes": {
-    "html": { "bytes": 15432, "count": 1 },
-    "css": { "bytes": 67890, "count": 3 },
-    "js": { "bytes": 24576, "count": 4 },
-    "image": { "bytes": 1048576, "count": 8 },
-    "video": { "bytes": 2097152, "count": 2 },
-    "audio": { "bytes": 512000, "count": 2 },
-    "font": { "bytes": 102400, "count": 2 },
-    "flash": { "bytes": 40960, "count": 1 },
-    "plugin": { "bytes": 0, "count": 0 },
-    "data": { "bytes": 20480, "count": 2 },
-    "other": { "bytes": 8192, "count": 1 },
-    "total": { "bytes": 4196358, "count": 26 }
+  url: 'https://nytimes.com',
+  requestedSnapshot: '19961112181513',
+  snapshot: '19961112181513',
+  archiveUrl: 'https://web.archive.org/web/19961112181513/https://nytimes.com',
+  sizes: {
+    html: { bytes: 1653, count: 1 },
+    css: { bytes: 0, count: 0 },
+    js: { bytes: 0, count: 0 },
+    image: { bytes: 46226, count: 2 },
+    video: { bytes: 0, count: 0 },
+    audio: { bytes: 0, count: 0 },
+    font: { bytes: 0, count: 0 },
+    flash: { bytes: 0, count: 0 },
+    plugin: { bytes: 0, count: 0 },
+    data: { bytes: 0, count: 0 },
+    other: { bytes: 0, count: 0 },
+    total: { bytes: 47879, count: 3 }
   },
-  "completeness": "92%",
-  "assets": [
-    { "url": "https://web.archive.org/web/20120101123456js_/script.js", "type": "js", "size": 10240 },
-    { "url": "https://web.archive.org/web/20120101123456js_/analytics.js", "type": "js", "size": 14336 },
-    ...
+  completeness: '100%',
+  assets: [
+    {
+      url: 'https://web.archive.org/web/19961112181513im_/http://www.nytimes.com/index.gif',
+      type: 'image',
+      size: 45259
+    },
+    {
+      url: 'https://web.archive.org/web/19961112181513im_/http://www.nytimes.com/free-images/marker.gif',
+      type: 'image',
+      size: 967
+    }
   ]
 }
 ```
