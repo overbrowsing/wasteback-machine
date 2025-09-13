@@ -49,7 +49,7 @@ Wasteback Machine provides two main functions:
 ```javascript
 import { getSnapshots } from "@overbrowsing/wasteback-machine";
 
-// Get all snapshots for a URL between 2012 and 2025
+// Get all snapshots for a www.nytimes.com between 2012 and 2025
 const snapshots = await getSnapshots('https://nytimes.com', 1996, 2025);
 console.log(snapshots);
 ```
@@ -67,7 +67,7 @@ Example Output:
 ```javascript
 import { getSnapshotSizes } from "@overbrowsing/wasteback-machine";
 
-// Analyse a specific snapshot (includeAssets is optional)
+// Analyse www.nytimes.com snapshot from November 12, 1996
 const snapshotData = await getSnapshotSizes(
   'https://nytimes.com',
   '19961112181513',
