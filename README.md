@@ -144,7 +144,7 @@ A paper on the Wasteback Machine method is currently being prepared. Until it is
 ## Disclaimer
 
 > [!IMPORTANT]
-> Wasteback Machine outputs are indicative, not exact, showing relative trends over time. Environmental impact estimates are approximate. Users should verify any claims with evidence and consult qualified professionals for formal reporting. The authors are not responsible for how the software, its outputs, or derived findings are used.
+> This tool is provided for research and educational purposes only. Results may be incomplete or inaccurate. Users are responsible for how they use the information, and the authors take no responsibility for any consequences arising from its use.
 
 ## Contributing
 
