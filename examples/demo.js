@@ -1,20 +1,8 @@
 import { getSnapshots, getSnapshotSizes } from "../src/wasteback-machine.js";
-import readline from "readline";
 import { co2 } from "@tgwf/co2"; // For calculating CO₂e emissions from data transfer
 
-// Setup readline interface for user input
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-// Wrapper around readline.question to use async/await instead of callbacks
-function question(prompt) {
-  return new Promise(resolve => rl.question(prompt, answer => resolve(answer.trim())));
-}
-
 // Ensure the URL has a valid scheme (if https:// is missing)
-function normalizeUrl(url) {
+function normaliseUrl(url) {
   return /^https?:\/\//i.test(url) ? url : `https://${url}`;
 }
 
@@ -23,7 +11,7 @@ function formatSnapshot(ts) {
   return `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}`;
 }
 
-// Build a Internet Archive's Wayback Machine timestamp (YYYYMMDDhhmmss) from year, month, day
+// Build an Internet Archive Wayback Machine timestamp (YYYYMMDDhhmmss) from year, month, day
 function buildTimestamp(year, month = "01", day = "01") {
   return `${year}${month.padStart(2, "0")}${day.padStart(2, "0")}`.padEnd(14, "0");
 }
@@ -31,28 +19,28 @@ function buildTimestamp(year, month = "01", day = "01") {
 // Main execution block
 (async () => {
   try {
-    // Prompt for URL and validate input
-    let url = await question("Enter the target URL: ");
-    if (!url) throw new Error("No URL provided.");
-    url = normalizeUrl(url);
+    // Accept CLI: node /demo.js <URL> <Year YYYY> [Month MM] [Day DD]
+    const [, , rawUrl, yearInput, monthInput = "01", dayInput = "01"] = process.argv;
 
-    // Prompt for year, ensuring it's valid and not before the Internet Archive started archiving websites (1996)
-    const yearInput = await question("Enter year (YYYY): ");
+    if (!rawUrl || !yearInput) {
+      throw new Error("Usage: node script.js <URL> <Year YYYY> [Month MM] [Day DD]");
+    }
+
+    // Validate and normalise input URL
+    let url = normaliseUrl(rawUrl);
+
+    // Ensure year is valid and not before the Internet Archive started archiving websites (1996)
     const year = parseInt(yearInput);
     if (isNaN(year) || year < 1996) throw new Error("Invalid year.");
 
-    // Prompt for optional month and day, defaulting to "01"
-    const month = (await question("Enter month (MM, optional): ")) || "01";
-    const day = (await question("Enter day (DD, optional): ")) || "01";
-    const targetTimestamp = buildTimestamp(year, month, day);
+    const targetTimestamp = buildTimestamp(year, monthInput, dayInput);
 
-    console.log(`Fetching snapshots for ${url} in ${year}-${month}-${day}...`);
+    console.log(`Fetching snapshots for ${url} in ${year}-${monthInput}-${dayInput}...`);
 
     // Fetch snapshots from the Internet Archive's Wayback Machine
     const snapshots = await getSnapshots(url, year, year);
     if (!snapshots.length) {
       console.log("No snapshots found.");
-      rl.close();
       return;
     }
 
@@ -63,7 +51,7 @@ function buildTimestamp(year, month = "01", day = "01") {
         : prev
     );
 
-    // Build Internet Archive's Wayback Machine snapshot URL
+    // Build Internet Archive Wayback Machine snapshot URL
     const snapshotUrl = `https://web.archive.org/web/${closest}/${url}`;
 
     console.log(`Closest snapshot: ${formatSnapshot(closest)}`);
@@ -89,7 +77,6 @@ function buildTimestamp(year, month = "01", day = "01") {
     console.log("\nPage Composition Results:\n");
 
     const total = result.sizes.total.bytes;
-
     for (const [type, data] of Object.entries(result.sizes)) {
       if (type === "total") continue;
       if (!data.count || data.bytes === 0) continue;
@@ -106,7 +93,5 @@ function buildTimestamp(year, month = "01", day = "01") {
     }
   } catch (err) {
     console.error("Error:", err.message);
-  } finally {
-    rl.close();
   }
 })();
