@@ -116,7 +116,7 @@ Example Output:
 
 ## Demo
 
-A full interactive demo is available in [`examples/demo.js`](examples/demo.js), which integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of page data transfer.
+A demo is available in [`examples/demo.js`](examples/demo.js), which integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of page data transfer.
 
 The demo allows you to:
 - Enter a URL and a target date (year, optional month and day).
@@ -134,7 +134,14 @@ The demo allows you to:
 Run the demo with Node.js:
 
 ```bash
-node examples/demo.js
+node examples/demo.js <URL> <Year YYYY> [Month MM] [Day DD]
+```
+
+Example:
+
+```bash
+# Analyse www.nytimes.com snapshot from November 12, 1996
+node examples/demo.js www.nytimes.com 1996 11 12
 ```
 
 ## Method
