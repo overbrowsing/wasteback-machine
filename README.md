@@ -148,20 +148,20 @@ node examples/demo.js www.nytimes.com 1996 11 12
 
 A paper on the Wasteback Machine method is currently being prepared. Until it is published, please contact overbrowsing@ed.ac.uk for more information.
 
+## Limitations
+
+- The Wasteback Machine is a heuristic tool focusing on bytes transferred and should be interpreted as indicative trends rather than precise measurements.
+- Longitudinal analyses are affected by advances in web technology, network and computational efficiencies, and changing user expectations, making exact "apples-to-apples" comparisons challenging.
+- When combining Wasteback Machine results with contemporary data, comparisons should be made under equivalent conditions, and sensitivity analyses are recommended. Results from live websites and historical snapshots should be clearly distinguished in reporting.
+- The Wasteback Machine does not capture system-level energy use or operational context and cannot assess the renewable energy status of hosting, which should be assumed unknown unless verified.
+- Not all assets have the same environmental impact. Assets such as complex JavaScript or CSS animations require more client-side resources and energy.
+- The Internet Archive’s Wayback Machine does not capture every asset, and in certain edge cases, dynamically loaded resources, single-page applications, websites that use iFrames, or other embedded content may not be measured accurately.
+- The completeness score reflects the proportion of assets retrieved from a snapshot, not the completeness of the snapshot as captured by the Internet Archive.
+
 ## Disclaimer
 
 > [!WARNING]
 >The Wasteback Machine is provided on an as-is basis for informational purposes only. Users are expected to exercise professional judgement when interpreting and applying the data and insights generated, and the authors disclaim any liability for consequences arising from its use. Regular, contemporaneous measurement and reporting remain best practice in evaluating web sustainability.
-
-### Limitations
-
-The Wasteback Machine is a heuristic tool that focuses on bytes transferred as a stable metric and should be interpreted as indicative trends rather than precise measurements. It can be combined with libraries that convert bytes to CO₂e to provide indicative environmental analysis, but it is not a formal carbon accounting tool. Longitudinal comparability is influenced by changes in web technology, efficiencies, best practice, and user expectations. When Wasteback Machine results are combined with contemporary data, comparisons should be made under equivalent conditions, and sensitivity analyses are recommended. Analyses from live websites and historical snapshots should be clearly distinguished in reporting wherever possible.
-
-Users should note that not all bytes have the same environmental impact: for example, video or large image assets consume more network energy than text. The Wasteback Machine does not capture system-level energy use or operational context and cannot assess the renewable energy status of hosting, which should be assumed unknown unless verified.
-
-Several limitations are inherent to this method. The Internet Archive’s Wayback Machine does not capture every asset, and in certain edge cases, dynamically loaded resources, single-page applications, websites that use iFrames, or other embedded content may not be measured accurately. The completeness score reflects the proportion of assets retrieved from a snapshot, not the completeness of the snapshot as captured by the Internet Archive.
-
-Overall, the Wasteback Machine is a heuristic tool that highlights the limitations of retrospective analysis. Users are encouraged to follow established best practices for web sustainability, including regular measurement, reporting, and referencing frameworks such as ISO/IEC 21031 or guidance from the Green Web Foundation.
 
 ## Contributing
 
