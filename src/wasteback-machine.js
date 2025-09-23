@@ -1,5 +1,5 @@
 /**
- * Wasteback Machine v1.0.9
+ * Wasteback Machine v1.0.10
  * Measure the environmental impact of the past web
  *
  * Author: Overbrowsing Research Group
