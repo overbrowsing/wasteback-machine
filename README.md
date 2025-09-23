@@ -149,7 +149,7 @@ node examples/demo.js www.nytimes.com 1996 11 12
 A paper on the Wasteback Machine method is currently being prepared. Until it is published, please contact overbrowsing@ed.ac.uk for more information.
 
 ## Disclaimer
-s
+
 > [!IMPORTANT]
 > - The Wasteback Machine is provided on an as-is basis for informational purposes only. Users are expected to exercise professional judgement when interpreting and applying the data and insights generated, and the authors disclaim any liability for consequences arising from its use.
 > - The Wasteback Machine is a heuristic tool focusing on bytes transferred and should be interpreted as indicative trends rather than precise measurements. Regular, contemporaneous measurement and reporting remain best practice in evaluating web sustainability.
