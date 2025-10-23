@@ -1,27 +1,24 @@
 {
   "name": "@overbrowsing/wasteback-machine",
-  "version": "1.0.10",
-  "description": "Measure the environmental impact of the past web.",
+  "version": "1.0.11",
+  "description": "JavaScript library for measuring the size and composition of archived web pages.",
   "main": "src/wasteback-machine.js",
   "type": "module",
   "scripts": {
     "demo": "node examples/demo.js"
   },
   "keywords": [
+    "web-archives",
+    "internet-archive",
     "wayback-machine",
     "website-analysis",
-    "web-performance",
-    "sustainable-web",
-    "carbon-footprint",
-    "co2-emissions",
-    "web-sustainability",
-    "page-size-analysis",
-    "digital-footprint"
+    "webpage-metrics",
+    "sustainable-web-design"
   ],
   "author": "Overbrowsing",
   "license": "Apache-2.0",
   "dependencies": {
-    "@tgwf/co2": "^0.16.9",
-    "jsdom": "^26.1.0"
+    "jsdom": "^26.1.0",
+    "@tgwf/co2": "^0.16.9"
   }
 }
