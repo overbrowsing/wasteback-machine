@@ -165,8 +165,6 @@ Contributions are welcome! Please [submit an issue](https://github.com/overbrows
 
 ## Licenses
 
-This project is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)).
+Wasteback Machine is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)). For full licensing details, see the [LICENSE](/LICENSE) file.
 
-The Wayback CDX Server API and Wayback Replay API is provided by the Internet Archive and is subject to their [Terms of Use](https://archive.org/about/terms).
-
-See the [LICENSE](/LICENSE) file for details.
+The Wayback Machine, Wayback CDX Server API, and Wayback Replay API are provided by the Internet Archive and are governed by their [Terms of Use](https://archive.org/about/terms).
