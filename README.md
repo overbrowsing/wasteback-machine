@@ -6,18 +6,22 @@
 
 ## What Is Wasteback Machine?
 
-Wasteback Machine is a JavaScript library for analysing historical website sizes, composition, and environmental impact using snapshots from the [Internet Archive's Wayback Machine](https://web.archive.org).
+Wasteback Machine is a JavaScript library for measuring the size and composition of archived web pages (mementos) from the [Internet Archive's Wayback Machine](https://web.archive.org).
 
-## Why Use It?
+## Why Use Wasteback Machine?
 
-Most page analysis tools are strictly contemporary, ignoring historical context. Wasteback Machine retrieves archived pages from the Internet Archive’s Wayback Machine with high fidelity, removing artifacts, correcting modifications, and preserving temporal coherence. This enables retrospective longitudinal analysis of page size, defined as the amount of data transferred over the internet when a webpage is loaded, along with page composition. It also supports the estimation of environmental impact using libraries that convert page size into equivalent carbon emissions, such as [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview), and easy integration with research or analytics workflows focused on web growth and sustainability.
+Wasteback Machine retrieves mementos with high fidelity, removing archive linkage and replay-preserving modifications, and excluding replay-induced distortions, while preserving temporal coherence. The library extracts and classifies binary resources (URI-Ms) to accurately measure page size and composition.
+
+The method overcomes the limitations of live-measurement approaches by recognising the unique nature of web archives as re-born digital objects and navigating their complexities to make them analytically tractable. This enables retrospective analysis of websites.
+
+Its modular design supports integration into research workflows, analytics pipelines, and sustainability assessment tools, facilitating the study of web evolution and informing interventions to measure the internet’s environmental impact.
 
 ## Features
 
-- **Retrieve snapshots by date or timespan:** Selects the nearest snapshot if the exact timestamp is missing.
-- **Analyse page composition:** Measure sizes of HTML, CSS, JS, images, videos, fonts, etc.
-- **Generate detailed asset lists:** Includes URLs, types, and sizes of all page assets.
-- **Retrieval completeness score:** See what percentage of a snapshot was successfully retrieved.
+- **Retrieve mementos by date or timespan:** Selects the nearest memento if the exact timestamp is missing.
+- **Analyse page composition:** Measure sizes of HTML, style sheets, scripts, images, videos, fonts, etc.
+- **Generate detailed resource (URI-M) lists:** Includes URLs, types, and sizes of all URI-Ms.
+- **Retrieval completeness score:** See what percentage of a memento was successfully retrieved.
 
 ## Installation
 
@@ -39,19 +43,19 @@ yarn add @overbrowsing/wasteback-machine
 
 ## Usage
 
-Wasteback Machine provides two main functions:
+Wasteback Machine provides two primary functions:
 
-1. Discover available snapshots for a URL in a given time range.
-2. Analyse a specific snapshot for page size and composition.
+1. Discover available mementos for a URL in a given time range.
+2. Analyse a specific memento for page size and composition.
 
-### 1. Fetch Available Snapshots
+### 1. Fetch Available Mementos
 
 ```javascript
-import { getSnapshots } from "@overbrowsing/wasteback-machine";
+import { getMementos } from "@overbrowsing/wasteback-machine";
 
-// Get all snapshots for www.nytimes.com between 1996 and 2025
-const snapshots = await getSnapshots('https://nytimes.com', 1996, 2025);
-console.log(snapshots);
+// Get all mementos for www.nytimes.com between 1996 and 2025
+const mementos = await getMementos('https://nytimes.com', 1996, 2025);
+console.log(mementos);
 ```
 
 Example Output:
@@ -62,18 +66,18 @@ Example Output:
 ]
 ```
 
-### 2. Analyse a Specific Snapshot
+### 2. Analyse a Specific Memento
 
 ```javascript
-import { getSnapshotSizes } from "@overbrowsing/wasteback-machine";
+import { getMementoSizes } from "@overbrowsing/wasteback-machine";
 
-// Analyse www.nytimes.com snapshot from November 12, 1996
-const snapshotData = await getSnapshotSizes(
+// Analyse www.nytimes.com memento from November 12, 1996
+const mementoData = await getMementoSizes(
   'https://nytimes.com',
   '19961112181513',
-  { includeAssets: true } // optional: set to true to include full asset list
+  { includeResources: true } // optional: include full resource list
 );
-console.log(snapshotData);
+console.log(mementoData);
 ```
 
 Example Output:
@@ -81,13 +85,13 @@ Example Output:
 ```js
 {
   url: 'https://nytimes.com',
-  requestedSnapshot: '19961112181513',
-  snapshot: '19961112181513',
-  archiveUrl: 'https://web.archive.org/web/19961112181513/https://nytimes.com',
+  requestedMemento: '19961112181513',
+  memento: '19961112181513',
+  mementoURL: 'https://web.archive.org/web/19961112181513/https://nytimes.com',
   sizes: {
     html: { bytes: 1653, count: 1 },
-    css: { bytes: 0, count: 0 },
-    js: { bytes: 0, count: 0 },
+    stylesheet: { bytes: 0, count: 0 },
+    script: { bytes: 0, count: 0 },
     image: { bytes: 46226, count: 2 },
     video: { bytes: 0, count: 0 },
     audio: { bytes: 0, count: 0 },
@@ -99,7 +103,7 @@ Example Output:
     total: { bytes: 47879, count: 3 }
   },
   completeness: '100%',
-  assets: [
+  resources: [
     {
       url: 'https://web.archive.org/web/19961112181513im_/http://www.nytimes.com/index.gif',
       type: 'image',
@@ -116,7 +120,7 @@ Example Output:
 
 ## Demo
 
-A demo is available in [`examples/demo.js`](examples/demo.js), which integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of page data transfer.
+A demo is available in [`examples/demo.js`](examples/demo.js). It integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of page data transfer.
 
 The demo allows you to:
 - Enter a URL and a target date (year, optional month and day).
@@ -140,23 +144,20 @@ node examples/demo.js <URL> <Year YYYY> [Month MM] [Day DD]
 Example:
 
 ```bash
-# Analyse www.nytimes.com snapshot from November 12, 1996
+# Analyse www.nytimes.com memento from November 12, 1996
 node examples/demo.js www.nytimes.com 1996 11 12
 ```
 
-## Method
+## Methodology
 
-A paper on the Wasteback Machine method is currently being prepared. Until it is published, please contact overbrowsing@ed.ac.uk for more information.
+For details on Wasteback Machine’s methodology, assumptions, and limitations, please refer to our working paper. It provides guidance on the library’s intended use, interpretive constraints, and best practices for integrating results into research or sustainability assessments.
+
+For questions or access before publication, please contact [overbrowsing@ed.ac.uk](mailto:overbrowsing@ed.ac.uk).
 
 ## Disclaimer
 
 > [!IMPORTANT]
-> - The Wasteback Machine is provided on an as-is basis for informational purposes only. Users are expected to exercise professional judgement when interpreting and applying the data and insights generated, and the authors disclaim any liability for consequences arising from its use.
-> - The Wasteback Machine is a heuristic tool focusing on bytes transferred and should be interpreted as indicative trends rather than precise measurements. Regular, contemporaneous measurement and reporting remain best practice in evaluating web sustainability.
-> - Longitudinal comparability is affected by advances in web technology, network and computational efficiencies ([Koomey's Law](https://ieeexplore.ieee.org/document/5440129)), and changing user expectations, making exact "apples-to-apples" comparisons challenging. When combining results with contemporary data, comparisons should be made under equivalent conditions, and sensitivity analyses are recommended. Results from live websites and historical snapshots should be clearly distinguished in reporting.
-> - The Wasteback Machine does not capture system-level energy use or operational context and cannot determine if hosting is on [verified renewable energy](https://www.thegreenwebfoundation.org/green-web-check).
-> - Not all bytes have the same environmental impact, as some assets, such as complex JavaScript or CSS, require more client-side resources and energy than others.
-> - The Internet Archive’s Wayback Machine snapshots may not be complete. Futhermore, in certain edge cases, such as dynamically loaded resources, single-page applications, or websites using iFrames, may not be measured accurately. The completeness score reflects the proportion of assets retrieved from an archived page, not the completeness of the live page at the time of archiving.
+> This library is provided for informational and research purposes only. The authors make no guarantees about the accuracy of the results and disclaim any liability for their use.
 
 ## Contributing
 
@@ -166,6 +167,6 @@ Contributions are welcome! Please [submit an issue](https://github.com/overbrows
 
 This project is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)).
 
-The Wayback Machine API is provided by the Internet Archive and is subject to their [Terms of Use](https://archive.org/about/terms).
+The Wayback CDX Server API and Wayback Replay API is provided by the Internet Archive and is subject to their [Terms of Use](https://archive.org/about/terms).
 
 See the [LICENSE](/LICENSE) file for details.
