@@ -123,15 +123,16 @@ Example Output:
 A demo is available in [`examples/demo.js`](examples/demo.js). It integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of page data transfer.
 
 The demo allows you to:
-- Enter a URL and a target date (year, optional month and day).
-- See page size results:
-  - Total data transfer (KB)
-  - Estimated emissions (grams CO₂e)
-  - Completeness of retrieval
-- View a breakdown of all assets including:
-  - Number of files
-  - Size (KB) and percentage of total page size
-  - Estimated CO₂e per type
+- Enter a URL and target date (year, with optional month and day).
+- View overall page metrics:
+  - Total page size (KB)
+	- Estimated equivalent emissions per page load (g CO₂e)
+	- Completeness of retrieval (%)
+- View a detailed resource breakdown (URI-Ms):
+	- Count of URI-Ms by type (images, scripts, stylesheets, etc.)
+	- Total size per type (KB)
+	- Percentage of total page size (%)
+	- Estimated equivalent emissions per type per page load (g CO₂e)
 
 ### Run the Demo
 
@@ -140,6 +141,13 @@ Run the demo with Node.js:
 ```bash
 node examples/demo.js <URL> <Year YYYY> [Month MM] [Day DD]
 ```
+
+Parameters:
+- `<URL>`: Target website to analyse
+- `<Year YYYY> [Month MM] [Day DD]`: Desired memento date (YYYY MM DD)
+  -	`<Year YYYY>`: Year of interest
+  -	`[Month MM]`: Optional month (defaults to January (01) if omitted)
+  -	`[Day DD]`: Optional day (defaults to 1st (01) if omitted)
 
 Example:
 
