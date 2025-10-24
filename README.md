@@ -120,21 +120,9 @@ Example Output:
 
 ## Demo
 
-A demo is available in [`examples/demo.js`](examples/demo.js). It integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of page data transfer.
+A demo is available in [`examples/demo.js`](examples/demo.js). It integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of a memento.
 
-The demo allows you to:
-- Enter a URL and target date (year, with optional month and day).
-- View overall page metrics:
-  - Total page size (KB)
-	- Estimated equivalent emissions per page load (g CO₂e)
-	- Completeness of retrieval (%)
-- View a detailed resource breakdown (URI-Ms):
-	- Count of URI-Ms by type (images, scripts, stylesheets, etc.)
-	- Total size per type (KB)
-	- Percentage of total page size (%)
-	- Estimated equivalent emissions per type per page load (g CO₂e)
-
-### Run the Demo
+### Getting Started
 
 Run the demo with Node.js:
 
@@ -143,17 +131,55 @@ node examples/demo.js <URL> <Year YYYY> [Month MM] [Day DD]
 ```
 
 Parameters:
-- `<URL>`: Target website to analyse
-- `<Year YYYY> [Month MM] [Day DD]`: Desired memento date (YYYY MM DD)
-  -	`<Year YYYY>`: Year of interest
-  -	`[Month MM]`: Optional month (defaults to January (01) if omitted)
-  -	`[Day DD]`: Optional day (defaults to 1st (01) if omitted)
+	•	<URL>: Target website to analyse
+	•	<Year YYYY>: Year of interest
+	•	[Month MM]: Optional month (defaults to January (01) if omitted)
+	•	[Day DD]: Optional day (defaults to 1st (01) if omitted)
 
 Example:
 
 ```bash
 # Analyse www.nytimes.com memento from November 12, 1996
 node examples/demo.js www.nytimes.com 1996 11 12
+```
+
+### Results
+
+After running the demo, you will receive a structured report for the desired memento:
+
+- Memento information:
+  - Retrieved memento URL
+  - Completeness of retrieval (%)
+- Page size results:
+  - Total page size (KB)
+  - Estimated equivalent emissions per page visit (g CO₂e)
+- Page composition results:
+  - Count of URI-Ms by type (images, scripts, stylesheets, etc.)
+  - Total size per type (KB) and percentage of total page size (%)
+  - Estimated equivalent emissions per type per page visit (g CO₂e)
+
+Example Output:
+
+```bash
+# Results for www.nytimes.com memento from November 12, 1996
+Retrieved Memento:
+🔗 Memento URL:     https://web.archive.org/web/19961112181513/https://www.nytimes.com
+✅ Completeness:    100%
+
+Page Size Results:
+📊 Data Transfer:   46.76 KB
+🌍 Page CO₂e:       0.014 g
+
+Page Composition Results:
+📁 HTML
+   Count:   1
+   Size:    1.61 KB (3.5%)
+   CO₂e:    0.000 g
+
+📁 IMAGE
+   Count:   2
+   Size:    45.14 KB (96.5%)
+   CO₂e:    0.013 g
 ```
 
 ## Methodology
