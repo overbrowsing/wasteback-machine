@@ -60,15 +60,18 @@ function buildTimestamp(year, month = "01", day = "01") {
     const oneByte = new co2({ model: "1byte" });
     const gramsCO2 = oneByte.perByte(totalBytes);
 
-    // Display summary results
-    console.log("\nPage Size Results:\n");
+    // Display memento information
+    console.log("\nRetrieved Memento:");
     console.log(`🔗 Memento URL:     ${result.mementoURL}`);
-    console.log(`📊 Data Transfer:   ${totalKB} KB`);
-    console.log(`🌍 Page CO₂e:       ${gramsCO2.toFixed(3)} g`);
     console.log(`✅ Completeness:    ${result.completeness}`);
 
-    // Display composition breakdown by resource (URI-M) type (style sheet, script, image, etc.)
-    console.log("\nPage Composition Results:\n");
+    // Display page size results
+    console.log("\nPage Size Results:");
+    console.log(`📊 Data Transfer:   ${totalKB} KB`);
+    console.log(`🌍 Page CO₂e:       ${gramsCO2.toFixed(3)} g`);
+
+    // Display page composition results
+    console.log("\nPage Composition Results:");
 
     const total = result.sizes.total.bytes;
     for (const [type, data] of Object.entries(result.sizes)) {
