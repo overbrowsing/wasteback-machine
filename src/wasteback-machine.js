@@ -1,5 +1,5 @@
 /**
- * Wasteback Machine v1.0.11
+ * Wasteback Machine v1.0.12
  * JavaScript library for measuring the size and composition of archived web pages
  *
  * Author: Overbrowsing Research Group
@@ -9,46 +9,28 @@
 
 import { JSDOM } from "jsdom";
 
-// Fetch with retry logic to handle flaky requests
-async function fetchWithRetry(url, options = {}, retries = 3) {
-  let error;
-  for (let attempt = 0; attempt < retries; attempt++) {
-    try {
-      const res = await fetch(url, options);
-      if (res.ok) return res;
-      error = new Error(`Non-OK response: ${res.status}`);
-    } catch (err) {
-      error = err;
-    }
-    await new Promise(r => setTimeout(r, 800 * (attempt + 1)));
-  }
-  throw error;
-}
-
-// Resource categories
+// Constants and Type Registries
 const CATEGORIES = [
   "html", "stylesheet", "script", "image", "video", "audio", "font", "flash", "plugin", "data", "other"
 ];
 
-// Define resource categories by extension
 const EXT_GROUPS = {
-  stylesheet: ["css"],
-  script: ["js","mjs","ts","jsx","tsx"],
-  image: ["png","jpg","jpeg","gif","webp","avif","bmp","ico","tiff","tif","svg","apng","heic","heif","jp2","j2k","dds"],
-  video: ["mp4","webm","ogv","m4v","mkv","mov","avi","flv","m2v","ts","rmvb","rm","f4v","f4p","f4a","f4b"],
-  audio: ["mp3","wav","ogg","oga","aac","m4a","flac","opus","mid","midi","ra","ram","aif","aiff","au"],
+  stylesheet: ["css","scss","sass","less"],
+  script: ["js","mjs","cjs","ts","jsx","tsx","coffee","vue"],
+  image: ["png","jpg","jpeg","gif","webp","avif","bmp","ico","cur","tiff","tif","svg","apng","heic","heif","jp2","j2k","dds","ppm","pgm","pbm","hdr"],
+  video: ["mp4","webm","ogv","m4v","mkv","mov","avi","flv","m2v","ts","rmvb","rm","f4v","f4p","f4a","f4b","3gp","3g2"],
+  audio: ["mp3","wav","ogg","oga","aac","m4a","flac","opus","mid","midi","ra","ram","aif","aiff","au","m4b"],
   font: ["woff","woff2","ttf","otf","eot","pfa","pfb"],
   flash: ["swf"],
   plugin: ["jar","class","xap","unity3d","dcr","dir","cab","ocx"],
-  data: ["json","xml","pdf","zip","tar","7z","wasm","map"]
+  data: ["json","xml","zip","tar","7z","wasm","map","csv","tsv","yaml","yml","sqlite","db","db3"],
+  document: ["txt","pdf","rtf","log","ini","conf"]
 };
 
 const TYPE_REGISTRY_EXT = Object.fromEntries(
-  Object.entries(EXT_GROUPS)
-        .flatMap(([cat, exts]) => exts.map(ext => [ext, cat]))
+  Object.entries(EXT_GROUPS).flatMap(([cat, exts]) => exts.map(ext => [ext, cat]))
 );
 
-// MIME-based resource classification
 const TYPE_REGISTRY = {
   mime: [
     { test: /^text\/html\b/i, cat: "html" },
@@ -75,7 +57,33 @@ const TYPE_REGISTRY = {
   ext: TYPE_REGISTRY_EXT
 };
 
-// Classify embedded resources (eURI-Ms) MIME first, then fallback to extension
+// Utilities
+async function fetchWithRetry(url, options = {}, retries = 3) {
+  let error;
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok) return res;
+      error = new Error(`Non-OK response: ${res.status}`);
+    } catch (err) {
+      error = err; 
+    }
+    await new Promise(r => setTimeout(r, 800 * (attempt + 1)));
+  }
+  throw error;
+}
+
+function normaliseUrl(u) {
+  try {
+    const url = new URL(u);
+    url.hash = "";
+    ["v","ver","cb"].forEach(p => url.searchParams.delete(p));
+    return url.href;
+  } catch {
+    return u;
+  }
+}
+
 function classifyResource(url = "", mime = "") {
   if (mime) {
     const rule = TYPE_REGISTRY.mime.find(r => r.test.test(mime));
@@ -85,161 +93,113 @@ function classifyResource(url = "", mime = "") {
   return TYPE_REGISTRY.ext[ext] || "other";
 }
 
-function extractSrcsetUrls(srcset = "") {
-  return srcset.split(",")
-    .map(part => part.trim().split(/\s+/)[0])
-    .filter(Boolean);
+function extractUrlsFromSrcset(srcset = "") {
+  return srcset.split(",").map(s => s.trim().split(/\s+/)[0]).filter(Boolean);
 }
 
-// Extract referenced embedded resources (eURI-Ms) from script files
 function extractUrlsFromScript(scriptText) {
   const urls = [];
-  const regex = /['"`](https?:\/\/[^'"`]+?)['"`]/g;
-  let match;
-  while ((match = regex.exec(scriptText)) !== null) {
-    urls.push(match[1]);
-  }
+  for (const match of scriptText.matchAll(/['"`](https?:\/\/[^'"`]+?)['"`]/g)) urls.push(match[1]);
   return urls;
 }
 
-async function getSize(url, hintedType = "") {
+// Resource Fetching
+async function getSize(url) {
   try {
     const res = await fetchWithRetry(url);
-    const contentType = res.headers.get("content-type") || "";
-    const finalType = classifyResource(url, contentType);
+    const mime = res.headers.get("content-type") || "";
+    const type = classifyResource(url, mime);
 
-    if (finalType === "stylesheet" || finalType === "script") {
+    if (type === "script" || type === "stylesheet") {
       let text = await res.text();
+      
       text = text
         .replace(/\/\*\s*FILE ARCHIVED ON[\s\S]*?\*\//gi, "")
         .replace(/\/\*\s*playback timings[\s\S]*?\*\//gi, "");
-      return { size: new TextEncoder().encode(text).length, contentType, text };
+
+      return { size: new TextEncoder().encode(text).length, type, text };
     }
 
     const buf = await res.arrayBuffer();
-    return { size: buf.byteLength, contentType };
-  } catch (err) {
-    console.warn(`Failed to fetch ${url}: ${err.message}`);
-    return null;
+    return { size: buf.byteLength, type };
+  } catch {
+    return { size: 0, type: "other" };
   }
 }
 
-function detectResourceType(tag, url = "", el = null, contentType = "") {
-  let cat = classifyResource(url, contentType);
-  if (!cat && el) {
-    if (tag === "link") {
-      const asHint = (el.getAttribute("as") || "").toLowerCase();
-      if (CATEGORIES.includes(asHint)) cat = asHint;
-    }
-    if (["source","embed","object"].includes(tag)) {
-      const t = el.getAttribute("type") || "";
-      cat = classifyResource("", t) || cat;
+async function fetchResourceSizes(resources) {
+  const results = [];
+  for (const { url } of resources) {
+    const { size, type, text } = await getSize(url);
+    results.push({ url, type, size });
+
+    if (text && type === "script") {
+      extractUrlsFromScript(text).forEach(u => results.push({ url: normaliseUrl(u), type: "other", size: 0 }));
     }
   }
-  if (!cat) {
-    if (tag === "script") cat = "script";
-    else if (tag === "link") cat = "stylesheet";
-    else if (tag === "img") cat = "image";
-    else if (tag === "audio") cat = "audio";
-    else if (tag === "video") cat = "video";
-    else cat = "other";
-  }
-  return cat;
+
+  const seen = new Set();
+  return results.filter(r => {
+    const n = normaliseUrl(r.url);
+    if (seen.has(n)) return false;
+    seen.add(n);
+    r.url = n;
+    return true;
+  });
 }
 
-// Get all available mementos for a URL
-export async function getMementos(url, startYear, endYear) {
-  const apiUrl = `https://web.archive.org/cdx/search/cdx?url=${encodeURIComponent(url)}&from=${startYear}&to=${endYear}&output=json&fl=timestamp&filter=statuscode:200`;
-  const res = await fetchWithRetry(apiUrl);
-  const data = await res.json();
-  return data.slice(1).map(row => row[0]).filter(ts => /^\d{14}$/.test(ts));
-}
-
-// Find the closest memento to a given datetime
-function closestMemento(mementos, target) {
-  return mementos.reduce((prev, curr) =>
-    Math.abs(Number(curr) - Number(target)) < Math.abs(Number(prev) - Number(target))
-      ? curr
-      : prev
-  );
-}
-
-// Extract resource URLs
+// HTML Parsing and Resource Extraction
 async function getResourceUrls(url, datetime) {
-  // Root HTML (rURI-R) fetched using the Wayback Replay API id_ endpoint, which replays the unmodified memento
   const htmlUrl = `https://web.archive.org/web/${datetime}id_/${url}`;
-  const htmlRes = await fetchWithRetry(htmlUrl);
-  const html = await htmlRes.text();
+  const html = await (await fetchWithRetry(htmlUrl)).text();
   const htmlSize = new TextEncoder().encode(html).length;
 
-  // Embedded resources (eURI-Ms) fetched using the Wayback Replay API if_ endpoint, which hides the Wayback Machine toolbar when replaying a memento
   const ifUrl = `https://web.archive.org/web/${datetime}if_/${url}`;
-  const ifRes = await fetchWithRetry(ifUrl);
-  const dom = new JSDOM(await ifRes.text());
-  const doc = dom.window.document;
+  const doc = new JSDOM(await (await fetchWithRetry(ifUrl)).text()).window.document;
 
   const resources = [];
-  const pushSafe = (rawUrl, tag, el) => {
-    if (!rawUrl) return;
-    if (/web-static\.archive\.org/i.test(rawUrl)) return;
-    try { resources.push({ url: new URL(rawUrl, ifUrl).href, tag, el }); }
-    catch (e) { console.warn(`Skipping malformed URL "${rawUrl}": ${e.message}`); }
+  const push = (rawUrl) => {
+    if (rawUrl && !/^\/_static\/|https?:\/\/web-static\.archive\.org/i.test(rawUrl)) {
+      try { resources.push({ url: new URL(rawUrl, ifUrl).href }); } catch {}
+    }
   };
 
-  // Capture standard embedded resources (eURI-Ms)
   doc.querySelectorAll(`
-    link[href],
-    script[src],
-    img[src],
-    img[srcset],
-    source[src],
-    source[srcset],
-    video[src],
-    video[poster],
-    audio[src],
-    iframe[src],
-    object[data],
-    embed[src]
+    link[href], script[src], img[src], img[srcset], source[src], source[srcset],
+    video[src], video[poster], audio[src], iframe[src], object[data], embed[src]
   `).forEach(el => {
-    const tag = el.tagName.toLowerCase();
-    if (tag === "link") pushSafe(el.getAttribute("href"), tag, el);
-    else if (tag === "object") pushSafe(el.getAttribute("data"), tag, el);
-    else if (tag === "video") {
-      pushSafe(el.getAttribute("src"), tag, el);
-      pushSafe(el.getAttribute("poster"), "img", el);
-    } else pushSafe(el.getAttribute("src"), tag, el);
-
-    if (el.hasAttribute("srcset")) extractSrcsetUrls(el.getAttribute("srcset")).forEach(u => pushSafe(u, tag, el));
+    push(el.src || el.getAttribute("src") || el.getAttribute("data") || el.getAttribute("poster"));
+    if (el.hasAttribute("srcset")) extractUrlsFromSrcset(el.getAttribute("srcset")).forEach(push);
   });
 
   doc.querySelectorAll('link[rel~="icon"][href], link[rel="apple-touch-icon"][href], link[rel="manifest"][href]')
-    .forEach(el => pushSafe(el.getAttribute("href"), "link", el));
+    .forEach(el => push(el.getAttribute("href")));
 
-  return { htmlSize, resources };
+  const seen = new Set();
+  return { htmlSize, resources: resources.filter(r => {
+    const n = normaliseUrl(r.url);
+    if (seen.has(n)) return false;
+    seen.add(n);
+    r.url = n;
+    return true;
+  })};
 }
 
-// Fetch embedded resources (eURI-Me) sizes
-async function fetchResourceSizes(resources) {
-  const results = [];
-  for (const r of resources) {
-    const result = await getSize(r.url);
-    if (!result) { results.push({ url: r.url, type: "other", size: 0 }); continue; }
-
-    const { size, contentType, text } = result;
-    const type = detectResourceType(r.tag, r.url, r.el, contentType);
-    results.push({ url: r.url, type, size });
-
-    if (text && type === "script") extractUrlsFromScript(text).forEach(u => results.push({ url: u, type: "other", size: 0 }));
-  }
-  return results;
+// Memento Handling CDX
+export async function getMementos(url, startYear, endYear) {
+  const apiUrl = `https://web.archive.org/cdx/search/cdx?url=${encodeURIComponent(url)}&from=${startYear}&to=${endYear}&output=json&fl=timestamp&filter=statuscode:200`;
+  const data = await (await fetchWithRetry(apiUrl)).json();
+  return data.slice(1).map(r => r[0]).filter(ts => /^\d{14}$/.test(ts));
 }
 
-// Get memento sizes and composition breakdown
-export async function getMementoSizes(
-  url,
-  datetime,
-  { includeResources = false, startYear = 1995, endYear = new Date().getFullYear() } = {} // 1995 marks the earliest memento available in the Wayback Machine
-) {
+function closestMemento(mementos, target) {
+  return mementos.reduce((prev, curr) =>
+    Math.abs(Number(curr) - Number(target)) < Math.abs(Number(prev) - Number(target)) ? curr : prev
+  );
+}
+
+// Main Execution Block
+export async function getMementoSizes(url, datetime, { includeResources = false, startYear = 1995, endYear = new Date().getFullYear() } = {}) {
   const mementos = await getMementos(url, startYear, endYear);
   if (!mementos.length) throw new Error(`No mementos for ${url} between ${startYear} and ${endYear}`);
 
@@ -251,15 +211,17 @@ export async function getMementoSizes(
   sizeData.html = { bytes: htmlSize, count: 1 };
   sizeData.total = { bytes: htmlSize, count: 1 };
 
-  resourceResults.forEach(({ type, size }) => {
+  for (const { type, size } of resourceResults) {
     const t = sizeData[type] ? type : "other";
     sizeData[t].bytes += size;
     sizeData[t].count += 1;
     sizeData.total.bytes += size;
     sizeData.total.count += 1;
-  });
+  }
 
-  const completeness = `${Math.round(resources.length ? (resourceResults.length / resources.length) * 100 : 100)}%`;
+  const completeness = `${Math.round(
+    resources.length ? (resourceResults.filter(r => r.size > 0).length / resources.length) * 100 : 100
+  )}%`;
 
   const output = {
     url,
