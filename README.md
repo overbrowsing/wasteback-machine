@@ -10,7 +10,7 @@ Wasteback Machine is a JavaScript library for measuring the size and composition
 
 ## Why Use Wasteback Machine?
 
-Wasteback Machine retrieves mementos with high fidelity, removing archive linkage and replay-preserving modifications, and excluding replay-induced distortions, while preserving temporal coherence. The library extracts and classifies binary resources (URI-Ms) to accurately measure page size and composition.
+Wasteback Machine retrieves mementos with high fidelity, removing archive linkage and replay-preserving modifications, and excluding replay-induced distortions, while preserving temporal coherence. The library extracts and classifies embedded binary resources (eURI-Ms) to accurately measure page size and composition.
 
 The method overcomes the limitations of live-measurement approaches by recognising the unique nature of web archives as re-born digital objects and navigating their complexities to make them analytically tractable. This enables retrospective analysis of websites.
 
@@ -18,10 +18,10 @@ Its modular design supports integration into research workflows, analytics pipel
 
 ## Features
 
-- **Retrieve mementos by date or timespan:** Selects the nearest memento if the exact timestamp is missing.
+- **Retrieve mementos by date or timespan:** Selects the nearest memento-datetime if the exact timestamp is missing.
 - **Analyse page composition:** Measure sizes of HTML, style sheets, scripts, images, videos, fonts, etc.
-- **Generate detailed resource (URI-M) lists:** Includes URLs, types, and sizes of all URI-Ms.
-- **Retrieval completeness score:** See what percentage of a memento was successfully retrieved.
+- **Generate detailed resource (eURI-M) lists:** Includes URLs, types, and sizes of all eURI-Ms.
+- **Retrieval completeness score:** See what percentage of a composite memento was successfully retrieved.
 
 ## Installation
 
@@ -45,10 +45,10 @@ yarn add @overbrowsing/wasteback-machine
 
 Wasteback Machine provides two primary functions:
 
-1. Discover available mementos for a URL in a given time range.
+1. Discover available memento-datetimes for a URL in a given time range.
 2. Analyse a specific memento for page size and composition.
 
-### 1. Fetch Available Mementos
+### 1. Fetch Available Memento-datetimes
 
 ```javascript
 import { getMementos } from "@overbrowsing/wasteback-machine";
@@ -58,7 +58,7 @@ const mementos = await getMementos('https://nytimes.com', 1996, 2025);
 console.log(mementos);
 ```
 
-Example Output:
+#### Example Output
 
 ```javascript
 [
@@ -80,7 +80,7 @@ const mementoData = await getMementoSizes(
 console.log(mementoData);
 ```
 
-Example Output:
+#### Example Output
 
 ```js
 {
@@ -130,13 +130,14 @@ Run the demo with Node.js:
 node examples/demo.js <URL> <Year YYYY> [Month MM] [Day DD]
 ```
 
-Parameters:
-	•	<URL>: Target website to analyse
-	•	<Year YYYY>: Year of interest
-	•	[Month MM]: Optional month (defaults to January (01) if omitted)
-	•	[Day DD]: Optional day (defaults to 1st (01) if omitted)
+#### Parameters
 
-Example:
+-	`<URL>`: Target website to analyse
+- `<Year YYYY>`: Year of interest
+- `[Month MM]`: Optional month (defaults to January (01) if omitted)
+- `[Day DD]`: Optional day (defaults to 1st (01) if omitted)
+
+#### Example
 
 ```bash
 # Analyse www.nytimes.com memento from November 12, 1996
@@ -154,11 +155,11 @@ After running the demo, you will receive a structured report for the desired mem
   - Total page size (KB)
   - Estimated equivalent emissions per page visit (g CO₂e)
 - Page composition results:
-  - Count of URI-Ms by type (images, scripts, stylesheets, etc.)
+  - Count of eURI-Ms by type (images, scripts, stylesheets, etc.)
   - Total size per type (KB) and percentage of total page size (%)
-  - Estimated equivalent emissions per type per page visit (g CO₂e)
+  - Estimated equivalent emissions per type, per page visit (g CO₂e)
 
-Example Output:
+#### Example Output
 
 ```bash
 # Results for www.nytimes.com memento from November 12, 1996

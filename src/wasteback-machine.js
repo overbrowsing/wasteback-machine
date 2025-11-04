@@ -75,7 +75,7 @@ const TYPE_REGISTRY = {
   ext: TYPE_REGISTRY_EXT
 };
 
-// Classify resources (URI-Ms) MIME first, then fallback to extension
+// Classify embedded resources (eURI-Ms) MIME first, then fallback to extension
 function classifyResource(url = "", mime = "") {
   if (mime) {
     const rule = TYPE_REGISTRY.mime.find(r => r.test.test(mime));
@@ -91,7 +91,7 @@ function extractSrcsetUrls(srcset = "") {
     .filter(Boolean);
 }
 
-// Extract referenced resources (URI-Ms) from script files
+// Extract referenced embedded resources (eURI-Ms) from script files
 function extractUrlsFromScript(scriptText) {
   const urls = [];
   const regex = /['"`](https?:\/\/[^'"`]+?)['"`]/g;
@@ -166,13 +166,13 @@ function closestMemento(mementos, target) {
 
 // Extract resource URLs
 async function getResourceUrls(url, datetime) {
-  // HTML fetched using the Wayback Replay API id_ endpoint, which replays the unmodified memento
+  // Root HTML (rURI-R) fetched using the Wayback Replay API id_ endpoint, which replays the unmodified memento
   const htmlUrl = `https://web.archive.org/web/${datetime}id_/${url}`;
   const htmlRes = await fetchWithRetry(htmlUrl);
   const html = await htmlRes.text();
   const htmlSize = new TextEncoder().encode(html).length;
 
-  // Resources (URI-Ms) fetched using the Wayback Replay API if_ endpoint, which hides the Wayback Machine toolbar when replaying a memento
+  // Embedded resources (eURI-Ms) fetched using the Wayback Replay API if_ endpoint, which hides the Wayback Machine toolbar when replaying a memento
   const ifUrl = `https://web.archive.org/web/${datetime}if_/${url}`;
   const ifRes = await fetchWithRetry(ifUrl);
   const dom = new JSDOM(await ifRes.text());
@@ -186,7 +186,7 @@ async function getResourceUrls(url, datetime) {
     catch (e) { console.warn(`Skipping malformed URL "${rawUrl}": ${e.message}`); }
   };
 
-  // Capture standard resources (URI-Ms)
+  // Capture standard embedded resources (eURI-Ms)
   doc.querySelectorAll(`
     link[href],
     script[src],
@@ -218,7 +218,7 @@ async function getResourceUrls(url, datetime) {
   return { htmlSize, resources };
 }
 
-// Fetch resource (URI-M) sizes
+// Fetch embedded resources (eURI-Me) sizes
 async function fetchResourceSizes(resources) {
   const results = [];
   for (const r of resources) {
