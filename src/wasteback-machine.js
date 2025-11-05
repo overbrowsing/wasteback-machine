@@ -168,7 +168,8 @@ async function getResourceUrls(url, datetime) {
     link[href], script[src], img[src], img[srcset], source[src], source[srcset],
     video[src], video[poster], audio[src], iframe[src], object[data], embed[src]
   `).forEach(el => {
-    push(el.src || el.getAttribute("src") || el.getAttribute("data") || el.getAttribute("poster"));
+    const rawUrl = el.getAttribute("src") || el.getAttribute("data") || el.getAttribute("poster") || el.getAttribute("href");
+    push(rawUrl);
     if (el.hasAttribute("srcset")) extractUrlsFromSrcset(el.getAttribute("srcset")).forEach(push);
   });
 
