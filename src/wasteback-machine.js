@@ -1,5 +1,5 @@
 /**
- * Wasteback Machine v1.0.12
+ * Wasteback Machine v1.0.13
  * JavaScript library for measuring the size and composition of archived web pages
  *
  * Author: Overbrowsing Research Group
