@@ -99,6 +99,7 @@ console.log(mementoData);
     flash: { bytes: 0, count: 0 },
     plugin: { bytes: 0, count: 0 },
     data: { bytes: 0, count: 0 },
+    document: { bytes: 0, count: 0 },
     other: { bytes: 0, count: 0 },
     total: { bytes: 47879, count: 3 }
   },
