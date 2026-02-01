@@ -20,6 +20,7 @@ export const loc = {
       ]
     }
   ],
-  excludedPaths: [
+    excludedPaths: [
+    "/static/"
   ]
 };
