@@ -4,30 +4,47 @@
 [![npm](https://img.shields.io/npm/dt/@overbrowsing/wasteback-machine.svg)](https://www.npmtrends.com/@overbrowsing/wasteback-machine)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github)
 
-## What Is Wasteback Machine?
+## What is Wasteback Machine?
 
-Wasteback Machine is a JavaScript library for measuring the size and composition of archived web pages (mementos) from the [Internet Archive's Wayback Machine](https://web.archive.org).
-
-## Why Use Wasteback Machine?
-
-Wasteback Machine retrieves mementos with high fidelity, removing archive linkage and replay-preserving modifications, and excluding replay-induced distortions, while preserving temporal coherence. The library extracts and classifies embedded binary resources (eURI-Ms) to accurately measure page size and composition.
-
-The method overcomes the limitations of live-measurement approaches by recognising the unique nature of web archives as re-born digital objects and navigating their complexities to make them analytically tractable. This enables retrospective analysis of websites.
-
-Its modular design supports integration into research workflows, analytics pipelines, and sustainability assessment tools, facilitating the study of web evolution and informing interventions to measure the internet’s environmental impact.
+Wasteback Machine is a JavaScript library for analysing archived web pages, measuring their size and composition to support retrospective, quantitative web research.
 
 ## Features
 
-- **Retrieve mementos by date or timespan:** Selects the nearest memento-datetime if the exact timestamp is missing.
-- **Analyse page composition:** Measure sizes of HTML, style sheets, scripts, images, videos, fonts, etc.
-- **Generate detailed resource (eURI-M) lists:** Includes URLs, types, and sizes of all eURI-Ms.
-- **Retrieval completeness score:** See what percentage of a composite memento was successfully retrieved.
+- **Archive-agnostic access:** Works with web archives that use the [Memento Protocol](https://datatracker.ietf.org/doc/html/rfc7089) and expose the unmodified archived page via the [id_ endpoint](https://web.archive.org/web/20130806040521/http://faq.web.archive.org/page-without-wayback-code/).
+- **Page composition analysis:** Analyses the full structure of an archived page, including HTML, stylesheets, scripts, images, fonts, and more.
+- **Resource inventory:** Produces an optional structured list of all discovered resources with their URLs, types, and byte sizes.
+- **Byte-accurate measurement:** Precisely measures the size of each resource, cleans stylesheets and scripts to remove archive-injected content, and excludes any resources that are not part of the original page.
+- **Completeness scoring:** Calculates how completely an archived page and its resources were retrieved.
+
+## Supported Web Archives
+
+| Web Archive                                                                                       | Organisation                                   | Web Archive ID ⭐️                      |
+|---------------------------------------------------------------------------------------------------|------------------------------------------------|---------------------------------------|
+| [Arquivo.pt](https://arquivo.pt)                                                                  | 🇵🇹 FCCN/FCT                                     | [arq](/src/archives/arq/arq.js)       |
+| [Australia Web Archive (Trove)](https://webarchive.nla.gov.au)                                    | 🇦🇺 National Library of Australia                | [awa](/src/archives/awa/awa.js)       |
+| [Webarchiv](https://webarchiv.cz)                                                                 | 🇨🇿 National Library of the Czech Republic       | [cz](/src/archives/cz/cz.js)          |
+| [Government of Canada Web Archive](https://webarchiveweb.bac-lac.canada.ca)                       | 🇨🇦 Library and Archives Canada                  | [gcwa](/src/gcwa/gcwa.js)             |
+| [Wayback Machine](https://web.archive.org)                                                        | 🇺🇸 Internet Archive                             | [ia](/src/archives/ia/ia.js)          |
+| [Icelandic Web Archive (Vefsafn.is)](https://vefsafn.is)                                          | 🇮🇸 National and University Library of Iceland   | [iwa](/src/archives/iwa/iwa.js)       |
+| [Library of Congress Web Archive](https://loc.gov/web-archives)                                   | 🇺🇸 Library of Congress                          | [loc](/src/archives/loc/loc.js)       |
+| [National Library of Ireland Web Archive](https://nli.ie/collections/our-collections/web-archive) | 🇮🇪 National Library of Ireland                  | [nliwa](/src/archives/nliwa/nliwa.js) |
+| [New Zealand Web Archive](https://webarchive.natlib.govt.nz)                                      | 🇳🇿 National Library of New Zealand              | [nzwa](/src/archives/nzwa/nzwa.js)    |
+| [PRONI Web Archive](https://webarchive.proni.gov.uk)                                              | 🇬🇧 The Public Record Office of Northern Ireland | [pwa](/src/archives/pwa/pwa.js)       |
+| [Spletni Arhiv](https://arhiv.nuk.uni-lj.si)                                                      | 🇸🇮 National and University Library of Slovenia  | [slo](/src/archives/slo/slo.js)       |
+| [UK Government Web Archive (UKGWA)](https://nationalarchives.gov.uk/webarchive)                   | 🇬🇧 The National Archives                        | [ukgwa](/src/archives/ukgwa/ukgwa.js) |
+| [~~UK Web Archive~~](https://www.webarchive.org.uk) (Offline)                                     | 🇬🇧 British Library                              | [ukwa](/src/archives/ukwa/ukwa.js)    |
+
+⭐️ This ID is used to select the web archive you want to query.
+
+### Adding a New Web Archive
+
+If you maintain a web archive not currently supported, please contact us at overbrowsing@ed.ac.uk.
 
 ## Installation
 
 ### Using NPM
 
-To install Wasteback Machine as a dependency for your projects using NPM:
+To install the Wasteback Machine as a dependency for your projects using NPM:
 
 ```sh
 npm install @overbrowsing/wasteback-machine
@@ -35,7 +52,7 @@ npm install @overbrowsing/wasteback-machine
 
 ### Using Yarn
 
-To install Wasteback Machine as a dependency for your projects using Yarn:
+To install the Wasteback Machine as a dependency for your projects using Yarn:
 
 ```sh
 yarn add @overbrowsing/wasteback-machine
@@ -43,18 +60,25 @@ yarn add @overbrowsing/wasteback-machine
 
 ## Usage
 
-Wasteback Machine provides two primary functions:
+The Wasteback Machine provides two primary functions:
 
-1. Discover available memento-datetimes for a URL in a given time range.
-2. Analyse a specific memento for page size and composition.
+1. Fetch available memento-datetimes within a specific web archive for a given URL and time range.
+2. Analyse a specific memento from a specific web archive to measure its page size and composition.
 
 ### 1. Fetch Available Memento-datetimes
+
+Get all mementos for https://nytimes.com between 1996 and 2025 from the Wayback Machine [(ia)](#supported-web-archives)
 
 ```javascript
 import { getMementos } from "@overbrowsing/wasteback-machine";
 
-// Get all mementos for www.nytimes.com between 1996 and 2025
-const mementos = await getMementos('https://nytimes.com', 1996, 2025);
+const mementos = await getMementos(
+  "ia", // Web archive ID (ia = Wayback Machine)
+  "https://nytimes.uk", // Target URL
+  1996, // Start year
+  2025 // End year
+);
+
 console.log(mementos);
 ```
 
@@ -62,21 +86,27 @@ console.log(mementos);
 
 ```javascript
 [
-  '19961112181513', '19961112181513', '19961112181513', '19961219002950', ...
+  '19961112181513',
+  '19961112181513',
+  '19961112181513',
+  '19961219002950'...
 ]
 ```
 
 ### 2. Analyse a Specific Memento
 
+Analyse https://nytimes.com from November 12, 1996 from the Wayback Machine [(ia)](#supported-web-archives)
+
 ```javascript
 import { getMementoSizes } from "@overbrowsing/wasteback-machine";
 
-// Analyse www.nytimes.com memento from November 12, 1996
 const mementoData = await getMementoSizes(
-  'https://nytimes.com',
-  '19961112181513',
-  { includeResources: true } // optional: include full resource list
+  "ia", // Web Archive ID (ia = Wayback Machine)
+  "https://nytimes.com", // Target URL
+  "19961112181513", // Memento datetime
+  { includeResources: true } // Resource list (true/false)
 );
+
 console.log(mementoData);
 ```
 
@@ -87,7 +117,10 @@ console.log(mementoData);
   url: 'https://nytimes.com',
   requestedMemento: '19961112181513',
   memento: '19961112181513',
-  mementoURL: 'https://web.archive.org/web/19961112181513/https://nytimes.com',
+  mementoUrl: 'https://web.archive.org/web/19961112181513if_/https://nytimes.com',
+  archive: 'Wayback Machine',
+  archiveOrg: 'Internet Archive',
+  archiveUrl: 'https://web.archive.org',
   sizes: {
     html: { bytes: 1653, count: 1 },
     stylesheet: { bytes: 0, count: 0 },
@@ -119,81 +152,75 @@ console.log(mementoData);
 }
 ```
 
-## Demo
+## Wasteback Machine CLI
 
-A demo is available in [`examples/demo.js`](examples/demo.js). It integrates [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) with the 1Byte model to estimate the environmental impact of a memento.
+The [Wasteback Machine CLI](/bin/cli.js) lets you easily query web archives, fetch mementos for a given URL and date, and see page size, composition, and estimated emissions using [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview/).
 
-### Getting Started
+### Quick Start
 
-Run the demo with Node.js:
+To initate Wasteback Machine CLI using NPM:
 
-```bash
-node examples/demo.js <URL> <Year YYYY> [Month MM] [Day DD]
+```sh
+npm run cli
 ```
 
-#### Parameters
+### CLI Prompts
 
--	`<URL>`: Target website to analyse
-- `<Year YYYY>`: Year of interest
-- `[Month MM]`: Optional month (defaults to January (01) if omitted)
-- `[Day DD]`: Optional day (defaults to 1st (01) if omitted)
-
-#### Example
-
-```bash
-# Analyse www.nytimes.com memento from November 12, 1996
-node examples/demo.js www.nytimes.com 1996 11 12
+```sh
+1. Enter web archive ID ('help' to list archives or [Enter ↵] = Wayback Machine):
+2. Enter URL to analyse:
+3. Enter target year (YYYY):
+4. Enter target month (MM or [Enter ↵] = 01):
+5. Enter target day (DD or [Enter ↵] = 01):
 ```
-
-### Results
-
-After running the demo, you will receive a structured report for the desired memento:
-
-- Memento information:
-  - Retrieved memento URL
-  - Completeness of retrieval (%)
-- Page size results:
-  - Total page size (KB)
-  - Estimated equivalent emissions per page visit (g CO₂e)
-- Page composition results:
-  - Count of eURI-Ms by type (images, scripts, stylesheets, etc.)
-  - Total size per type (KB) and percentage of total page size (%)
-  - Estimated equivalent emissions per type, per page visit (g CO₂e)
 
 #### Example Output
 
-```bash
-# Results for www.nytimes.com memento from November 12, 1996
-Retrieved Memento:
-🔗 Memento URL:     https://web.archive.org/web/19961112181513/https://www.nytimes.com
-✅ Completeness:    100%
+```sh
+________________________________________________________
 
-Page Size Results:
-📊 Data Transfer:   46.76 KB
-🌍 Page CO₂e:       0.014 g
+MEMENTO INFO
 
-Page Composition Results:
-📁 HTML
-   Count:   1
-   Size:    1.61 KB (3.5%)
-   CO₂e:    0.000 g
+  Memento URL:    https://web.archive.org/web/19961112181513if_/https://nytimes.com
+  Web Archive:    Wayback Machine
+  Organisation:   Internet Archive
+  Website:        https://web.archive.org
 
-📁 IMAGE
-   Count:   2
-   Size:    45.14 KB (96.5%)
-   CO₂e:    0.013 g
+________________________________________________________
+
+PAGE SIZE
+
+  Data:           46.76 KB
+  Emissions:      0.014 g CO₂e
+  Completeness:   100%
+
+________________________________________________________
+
+PAGE COMPOSITION
+
+  HTML
+      Count:      1
+      Data:       1653 bytes (3.5%)
+      Emissions:  0.000 g CO₂e
+
+  IMAGE
+      Count:      2
+      Data:       46226 bytes (96.5%)
+      Emissions:  0.013 g CO₂e
+
+________________________________________________________
 ```
 
 ## Methodology
 
-For details on Wasteback Machine’s methodology, assumptions, and limitations, please refer to our working paper. It provides guidance on the library’s intended use, interpretive constraints, and best practices for integrating results into research or sustainability assessments.
+For details of the underlying methodology, assumptions, and limitations, please refer to our paper [DOI 10.1371/journal.pclm.0000767](https://journals.plos.org/climate/article?id=10.1371/journal.pclm.0000767#sec009).
 
-For questions or access before publication, please contact [overbrowsing@ed.ac.uk](mailto:overbrowsing@ed.ac.uk).
+Wasteback Machine was developed as part of doctoral research at [The University of Edinburgh’s Institute for Design Informatics](https://designinformatics.org/portfolio-item/wasteback-machine/).
 
 ## Disclaimer
 
 > [!IMPORTANT]
-> This library is provided for informational and research purposes only. The authors make no guarantees about the accuracy of the results and disclaim any liability for their use.
+> Wasteback Machine is provided for informational and research purposes only. The authors make no guarantees about the accuracy of the results and disclaim any liability for their use. Use of Wasteback Machine is subject to the terms of service of each respective web archive.
 
 ## Contributing
 
@@ -201,6 +228,4 @@ Contributions are welcome! Please [submit an issue](https://github.com/overbrows
 
 ## Licenses
 
-Wasteback Machine is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)). For full licensing details, see the [LICENSE](/LICENSE) file.
-
-The Wayback Machine, Wayback CDX Server API, and Wayback Replay API are provided by the Internet Archive and are governed by their [Terms of Use](https://archive.org/about/terms).
+The Wasteback Machine is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)). For full licensing details, see the [LICENSE](/LICENSE) file.
