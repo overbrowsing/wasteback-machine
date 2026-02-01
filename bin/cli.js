@@ -81,7 +81,7 @@ async function spinWhile(promise, message) {
     const rawUrl = await ask("2. Enter URL to analyse: ");
     const yearInput = await ask("3. Enter target year (YYYY): ");
     const monthInput = (await ask("4. Enter target month (MM or [Enter ↵] = 01): ")) || "01";
-    const dayInput = (await ask("5. Enter target day (DD or [Enter ↵] = 01)")) || "01";
+    const dayInput = (await ask("5. Enter target day (DD or [Enter ↵] = 01): ")) || "01";
     console.log();
 
     if (!rawUrl || !yearInput) throw new Error("URL and year are required.");
