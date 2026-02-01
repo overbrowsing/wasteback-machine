@@ -47,7 +47,7 @@ If you maintain a web archive not currently supported, please contact us at over
 To install the Wasteback Machine as a dependency for your projects using NPM:
 
 ```sh
-npm install @overbrowsing/wasteback-machine
+npm i @overbrowsing/wasteback-machine
 ```
 
 ### Using Yarn
