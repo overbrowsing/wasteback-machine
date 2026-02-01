@@ -1,19 +1,18 @@
 {
   "name": "@overbrowsing/wasteback-machine",
-  "version": "1.0.13",
-  "description": "JavaScript library for measuring the size and composition of archived web pages.",
-  "main": "src/wasteback-machine.js",
+  "version": "2.0.1",
+  "description": "Wasteback Machine is a JavaScript library for measuring the size and composition of archived web pages (mementos).",
+  "main": "src/core/wasteback-machine.js",
   "type": "module",
   "scripts": {
-    "demo": "node examples/demo.js"
+    "cli": "node bin/cli.js"
   },
   "keywords": [
     "web-archives",
     "internet-archive",
     "wayback-machine",
     "website-analysis",
-    "webpage-metrics",
-    "sustainable-web-design"
+    "webpage-metrics"
   ],
   "author": "Overbrowsing",
   "license": "Apache-2.0",
