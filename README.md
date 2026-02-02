@@ -42,7 +42,7 @@ If you maintain a web archive not currently supported, please contact us at over
 
 ## Installation
 
-To install the Wasteback Machine as a dependency for your projects using NPM:
+To install Wasteback Machine as a dependency for your projects using NPM:
 
 ```sh
 npm i @overbrowsing/wasteback-machine
@@ -50,7 +50,7 @@ npm i @overbrowsing/wasteback-machine
 
 ## Usage
 
-The Wasteback Machine provides two primary functions:
+Wasteback Machine provides two primary functions:
 
 1. Fetch available memento-datetimes within a specific web archive for a given URL and time range.
 2. Analyse a specific memento from a specific web archive to measure its page size and composition.
@@ -218,4 +218,4 @@ Contributions are welcome! Please [submit an issue](https://github.com/overbrows
 
 ## Licenses
 
-The Wasteback Machine is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)). For full licensing details, see the [LICENSE](/LICENSE) file.
+Wasteback Machine is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)). For full licensing details, see the [LICENSE](/LICENSE) file.
