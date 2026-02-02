@@ -3,7 +3,7 @@ export const ukgwa = {
   id: "ukgwa",
   archive: "UK Government Web Archive (UKGWA)",
   archiveOrg: "The National Archives",
-  archiveUrl: "https://webarchive.nationalarchives.gov.uk/ukgwa",
+  archiveUrl: "https://webarchive.nationalarchives.gov.uk",
 
   // Timegate and endpoints
   timegate: "https://webarchive.nationalarchives.gov.uk/ukgwa/",
