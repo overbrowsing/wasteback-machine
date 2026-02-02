@@ -42,20 +42,10 @@ If you maintain a web archive not currently supported, please contact us at over
 
 ## Installation
 
-### Using NPM
-
 To install the Wasteback Machine as a dependency for your projects using NPM:
 
 ```sh
 npm i @overbrowsing/wasteback-machine
-```
-
-### Using Yarn
-
-To install the Wasteback Machine as a dependency for your projects using Yarn:
-
-```sh
-yarn add @overbrowsing/wasteback-machine
 ```
 
 ## Usage
@@ -158,7 +148,7 @@ The [Wasteback Machine CLI](/bin/cli.js) lets you easily query web archives, fet
 
 ### Quick Start
 
-To initate Wasteback Machine CLI using NPM:
+To initiate Wasteback Machine CLI using NPM:
 
 ```sh
 npm run cli
