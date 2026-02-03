@@ -1,7 +1,7 @@
 {
   "name": "@overbrowsing/wasteback-machine",
-  "version": "2.0.1",
-  "description": "Wasteback Machine is a JavaScript library for measuring the size and composition of archived web pages (mementos).",
+  "version": "2.0.2",
+  "description": "JavaScript library for measuring archived web pages.",
   "main": "src/core/wasteback-machine.js",
   "type": "module",
   "scripts": {
