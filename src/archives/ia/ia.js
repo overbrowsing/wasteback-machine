@@ -6,9 +6,9 @@ export const ia = {
   archiveUrl: "https://web.archive.org",
   
   // Timegate and endpoints
-  timegate: "https://webarchive.loc.gov/",
-  endpointID: "https://webarchive.loc.gov/all/${datetime}id_/${url}",
-  endpointIF: "https://webarchive.loc.gov/all/${datetime}if_/${url}",
+  timegate: "https://web.archive.org/web/",
+  endpointID: "https://web.archive.org/web/${datetime}id_/${url}",
+  endpointIF: "https://web.archive.org/web/${datetime}if_/${url}",
 
   // Cleaning and filtering rules
   cleaningRules: [
