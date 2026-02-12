@@ -32,7 +32,7 @@ Wasteback Machine is a JavaScript library for analysing archived web pages, meas
 | [PRONI Web Archive](https://webarchive.proni.gov.uk)                                              | 🇬🇧 The Public Record Office of Northern Ireland | [pwa](/src/archives/pwa/pwa.js)       |
 | [Spletni Arhiv](https://arhiv.nuk.uni-lj.si)                                                      | 🇸🇮 National and University Library of Slovenia  | [slo](/src/archives/slo/slo.js)       |
 | [UK Government Web Archive (UKGWA)](https://nationalarchives.gov.uk/webarchive)                   | 🇬🇧 The National Archives                        | [ukgwa](/src/archives/ukgwa/ukgwa.js) |
-| [~~UK Web Archive~~](https://www.webarchive.org.uk) (Offline)                                     | 🇬🇧 British Library                              | [ukwa](/src/archives/ukwa/ukwa.js)    |
+| [~~UK Web Archive~~](https://www.webarchive.org.uk) (Offline)                                     | 🇬🇧 UK Legal Deposit Libraries                   | [ukwa](/src/archives/ukwa/ukwa.js)    |
 
 ⭐️ This ID is used to select the web archive you want to query.
 
