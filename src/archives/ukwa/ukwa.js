@@ -2,7 +2,7 @@ export const ukwa = {
   // Archive metadata
   id: "ukwa",
   archive: "UK Web Archive",
-  archiveOrg: "British Library",
+  archiveOrg: "UK Legal Deposit Libraries",
   archiveUrl: "https://www.webarchive.org.uk",
 
   // Timegate and endpoints
