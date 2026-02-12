@@ -201,13 +201,11 @@ PAGE COMPOSITION
 ________________________________________________________
 ```
 
-## Methodology
+## Methodology and Development
+
+Wasteback Machine was developed as part of doctoral research at [The University of Edinburgh’s Institute for Design Informatics](https://designinformatics.org/portfolio-item/wasteback-machine/) and was supported in part by the [EADH (European Association for Digital Humanities)](https://eadh.org/).
 
 For details of the underlying methodology, assumptions, and limitations, please refer to our paper [DOI 10.1371/journal.pclm.0000767](https://journals.plos.org/climate/article?id=10.1371/journal.pclm.0000767#sec009).
-
-Wasteback Machine was developed as part of doctoral research at [The University of Edinburgh’s Institute for Design Informatics](https://designinformatics.org/portfolio-item/wasteback-machine/).
-
-## Disclaimer
 
 > [!IMPORTANT]
 > Wasteback Machine is provided for informational and research purposes only. The authors make no guarantees about the accuracy of the results and disclaim any liability for their use. Use of Wasteback Machine is subject to the terms of service of each respective web archive.
