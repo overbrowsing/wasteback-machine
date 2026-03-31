@@ -50,7 +50,7 @@ console.log(mementos);
 
 #### Example Output
 
-```json
+```javascript
 [
   '19961112181513', '19961121230155', '19961219002950', '19961220073509',
   '19961226135029', '19961228014508', '19961230230427', '19970209220858',
@@ -81,7 +81,7 @@ console.log(mementoData);
 
 #### Example Output
 
-```json
+```javascript
 {
   target: {
     url: 'https://nytimes.com', 
