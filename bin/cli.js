@@ -1,4 +1,4 @@
-import { getMementos, getMementoSizes } from "../src/core/wasteback-machine.js";
+import { getMementos, analyseMemento } from "../src/core/wasteback-machine.js";
 import { archives } from "../src/archives/index.js";
 import readline from "readline";
 import { co2 } from "@tgwf/co2";
@@ -106,20 +106,20 @@ async function spinWhile(promise, message) {
 
     // Get memento sizes
     const mementoData = await spinWhile(
-      getMementoSizes(archiveId, url, closestMemento, { includeResources: true }),
+      analyseMemento(archiveId, url, closestMemento, { includeResources: true }),
       `Analysing, please wait`
     );
 
     const totalBytes = mementoData.sizes.total.bytes;
-    const co2Model = new co2({ model: "1byte" });
+    const co2Model = new co2({ model: "swd" });
 
     // Print results
     console.log("\n________________________________________________________\n");
     console.log("MEMENTO INFO\n")
-    console.log(`  Memento URL:    ${mementoData.mementoUrl}`);
-    console.log(`  Web Archive:    ${mementoData.archive}`);
-    console.log(`  Organisation:   ${mementoData.archiveOrg}`);
-    console.log(`  Website:        ${mementoData.archiveUrl}`);
+    console.log(`  Memento URL:    ${mementoData.memento.url}`);
+    console.log(`  Web Archive:    ${mementoData.archive.name}`);
+    console.log(`  Organisation:   ${mementoData.archive.organisation}`);
+    console.log(`  Website:        ${mementoData.archive.url}`);
     console.log("\n________________________________________________________\n");
     console.log("PAGE SIZE\n");
     console.log(`  Data:           ${(totalBytes / 1024).toFixed(2)} KB`);
