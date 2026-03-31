@@ -6,39 +6,17 @@
 
 ## What is Wasteback Machine?
 
-Wasteback Machine is a JavaScript library for analysing archived web pages, measuring their size and composition to support retrospective, quantitative web research.
+Wasteback Machine is a JavaScript library for analysing archived web pages, measuring their size and composition to enable retrospective, quantitative web research.
 
 ## Features
 
-- **Archive-agnostic access:** Works with web archives that use the [Memento Protocol](https://datatracker.ietf.org/doc/html/rfc7089) and expose the unmodified archived page via the [id_ endpoint](https://web.archive.org/web/20130806040521/http://faq.web.archive.org/page-without-wayback-code/).
-- **Page composition analysis:** Analyses the full structure of an archived page, including HTML, stylesheets, scripts, images, fonts, and more.
-- **Resource inventory:** Produces an optional structured list of all discovered resources with their URLs, types, and byte sizes.
-- **Byte-accurate measurement:** Precisely measures the size of each resource, cleans stylesheets and scripts to remove archive-injected content, and excludes any resources that are not part of the original page.
-- **Completeness scoring:** Calculates how completely an archived page and its resources were retrieved.
-
-## Supported Web Archives
-
-| Web Archive                                                                                       | Organisation                                   | Web Archive ID ⭐️                      |
-|---------------------------------------------------------------------------------------------------|------------------------------------------------|---------------------------------------|
-| [Arquivo.pt](https://arquivo.pt)                                                                  | 🇵🇹 FCCN/FCT                                     | [arq](/src/archives/arq/arq.js)       |
-| [Australia Web Archive (Trove)](https://webarchive.nla.gov.au)                                    | 🇦🇺 National Library of Australia                | [awa](/src/archives/awa/awa.js)       |
-| [Webarchiv](https://webarchiv.cz)                                                                 | 🇨🇿 National Library of the Czech Republic       | [cz](/src/archives/cz/cz.js)          |
-| [Government of Canada Web Archive](https://webarchiveweb.bac-lac.canada.ca)                       | 🇨🇦 Library and Archives Canada                  | [gcwa](/src/gcwa/gcwa.js)             |
-| [Wayback Machine](https://web.archive.org)                                                        | 🇺🇸 Internet Archive                             | [ia](/src/archives/ia/ia.js)          |
-| [Icelandic Web Archive (Vefsafn.is)](https://vefsafn.is)                                          | 🇮🇸 National and University Library of Iceland   | [iwa](/src/archives/iwa/iwa.js)       |
-| [Library of Congress Web Archive](https://loc.gov/web-archives)                                   | 🇺🇸 Library of Congress                          | [loc](/src/archives/loc/loc.js)       |
-| [National Library of Ireland Web Archive](https://nli.ie/collections/our-collections/web-archive) | 🇮🇪 National Library of Ireland                  | [nliwa](/src/archives/nliwa/nliwa.js) |
-| [New Zealand Web Archive](https://webarchive.natlib.govt.nz)                                      | 🇳🇿 National Library of New Zealand              | [nzwa](/src/archives/nzwa/nzwa.js)    |
-| [PRONI Web Archive](https://webarchive.proni.gov.uk)                                              | 🇬🇧 The Public Record Office of Northern Ireland | [pwa](/src/archives/pwa/pwa.js)       |
-| [Spletni Arhiv](https://arhiv.nuk.uni-lj.si)                                                      | 🇸🇮 National and University Library of Slovenia  | [slo](/src/archives/slo/slo.js)       |
-| [UK Government Web Archive (UKGWA)](https://nationalarchives.gov.uk/webarchive)                   | 🇬🇧 The National Archives                        | [ukgwa](/src/archives/ukgwa/ukgwa.js) |
-| [~~UK Web Archive~~](https://www.webarchive.org.uk) (Offline)                                     | 🇬🇧 UK Legal Deposit Libraries                   | [ukwa](/src/archives/ukwa/ukwa.js)    |
-
-⭐️ This ID is used to select the web archive you want to query.
-
-### Adding a New Web Archive
-
-If you maintain a web archive not currently supported, please contact us at overbrowsing@ed.ac.uk.
+- **Archive-agnostic:** [Supports 20+ web archives](#supported-web-archives) and is extensible to additional archives that meet the [supporting criteria](#adding-web-archives).
+- **Memento aggregator:** Retrieve available memento-datetimes for a target URL from a supported archive’s CDX server.
+- **Page composition analysis:** Analyse an archived web page to break down its content by resource type, including HTML, stylesheets, scripts, images, fonts and more.
+- **Total and per-category size measurement:** Calculate both per-resource-category and total page size metrics, including counts and total bytes.
+- **Resource inventory:** Optionally produce a structured inventory of all resources, capturing metadata such as URL, type and byte size.
+- **Completeness scoring:** Determine how fully an archived web page and its resources were retrieved by Wasteback Machine.
+- **CLI utility:** Query web archives, analyse an archived web page and report page composition and size [directly from the command line](#wasteback-machine-cli).
 
 ## Installation
 
@@ -48,25 +26,23 @@ To install Wasteback Machine as a dependency for your projects using NPM:
 npm i @overbrowsing/wasteback-machine
 ```
 
-## Usage
+## Functions
 
-Wasteback Machine provides two primary functions:
+Wasteback Machine provides two functions:
 
-1. Fetch available memento-datetimes within a specific web archive for a given URL and time range.
-2. Analyse a specific memento from a specific web archive to measure its page size and composition.
+- **`getMementos`**: Fetch all memento-datetimes from the CDX server of a [supported web archive](#supported-web-archives) for a given URL.
+- **`analyseMemento`**: Analyses the size and composition of an archived web page from a [supported web archive](#supported-web-archives).
 
-### 1. Fetch Available Memento-datetimes
+### 1. Fetch Available Memento-datetimes (`getMementos`)
 
-Get all mementos for https://nytimes.com between 1996 and 2025 from the Wayback Machine [(ia)](#supported-web-archives)
+Fetch all memento-datetimes from the CDX server for https://nytimes.com, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
 
 ```javascript
 import { getMementos } from "@overbrowsing/wasteback-machine";
 
 const mementos = await getMementos(
-  "ia", // Web archive ID (ia = Wayback Machine)
-  "https://nytimes.uk", // Target URL
-  1996, // Start year
-  2025 // End year
+  "ia", // Web archive ID (🆔 = ia, Internet Archive)
+  "https://nytimes.com", // Target URL
 );
 
 console.log(mementos);
@@ -74,26 +50,29 @@ console.log(mementos);
 
 #### Example Output
 
-```javascript
+```json
 [
-  '19961112181513',
-  '19961112181513',
-  '19961112181513',
-  '19961219002950'...
+  '19961112181513', '19961121230155', '19961219002950', '19961220073509',
+  '19961226135029', '19961228014508', '19961230230427', '19970209220858',
+  '19970303103041', '19970414192930', '19970414210143', '19970415180120',
+  ... 688983 more items
 ]
 ```
 
-### 2. Analyse a Specific Memento
+### 2. Analyse An Archived Web Page (`analyseMemento`)
 
-Analyse https://nytimes.com from November 12, 1996 from the Wayback Machine [(ia)](#supported-web-archives)
+Analyse the archived snapshot of https://nytimes.com, November 12, 1996, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
+
+> [!TIP]
+> If you provide a full 14-digit datetime (`YYYYMMDDhhmmss`) using the function [`getMementos`](#1-fetch-available-memento-datetimes-getmementos), Wasteback Machine skips the TimeGate (URI-G) lookup, improving performance.
 
 ```javascript
-import { getMementoSizes } from "@overbrowsing/wasteback-machine";
+import { analyseMemento } from "@overbrowsing/wasteback-machine";
 
-const mementoData = await getMementoSizes(
-  "ia", // Web Archive ID (ia = Wayback Machine)
+const mementoData = await analyseMemento(
+  "ia", // Web archive ID (🆔 = ia, Internet Archive)
   "https://nytimes.com", // Target URL
-  "19961112181513", // Memento datetime
+  "19961112", // Target memento-datetime (YYYYMMDDhhmmss); minimum input: YYYY
   { includeResources: true } // Resource list (true/false)
 );
 
@@ -102,15 +81,23 @@ console.log(mementoData);
 
 #### Example Output
 
-```js
+```json
 {
-  url: 'https://nytimes.com',
-  requestedMemento: '19961112181513',
-  memento: '19961112181513',
-  mementoUrl: 'https://web.archive.org/web/19961112181513if_/https://nytimes.com',
-  archive: 'Wayback Machine',
-  archiveOrg: 'Internet Archive',
-  archiveUrl: 'https://web.archive.org',
+  target: {
+    url: 'https://nytimes.com', 
+    datetime: '19961112'
+  },
+  memento: {
+    url: 'https://web.archive.org/web/19961112181513if_/https://nytimes.com',
+    datetime: '19961112181513',
+  },
+  archive: {
+    name: 'Internet Archive (Wayback Machine)',
+    organisation: 'Internet Archive',
+    country: 'United States of America',
+    continent: 'North America',
+    url: 'https://web.archive.org',
+  },
   sizes: {
     html: { bytes: 1653, count: 1 },
     stylesheet: { bytes: 0, count: 0 },
@@ -142,9 +129,51 @@ console.log(mementoData);
 }
 ```
 
+## Supported Web Archives
+
+Each supported web archive has a unique web archive ID (🆔) required for API calls. The table also indicates which [functions](#functions) each archive supports.
+
+| Web Archive                                                                                                                                | Organisation                                      | 🆔                                           | [`getMementos`](#1-fetch-available-memento-datetimes-getmementos) | [`analyseMemento`](#2-analyse-a-composite-memento-analysememento) |
+|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|---------------------------------------------|------------------------------------------------------------------ |--------------------------------------------------------------------|
+| [Arquivo.pt](https://arquivo.pt)                                                                                                           | 🇵🇹 FCCN/FCT                                        | [arq](/src/archives/arq/arq.js)             | ✅                                                                | ✅                                                                 |
+| [National Library and Archives of Quebec (BAnQ) Web Archiving](https://www2.banq.qc.ca/collections/collections_patrimoniales/archives_web) | 🇨🇦 National Library and Archives of Quebec (BAnQ)  | [banq](/src/archives/banq/banq.js)          | ❌                                                                | ✅                                                                 |
+| [Columbia University Libraries Web Archives](https://library.columbia.edu/collections/web-archives)                                        | 🇺🇸 Columbia University Libraries                   | [cul](/src/archives/cul/cul.js)             | ✅                                                                | ✅                                                                 |
+| [Webarchiv](https://webarchiv.cz)                                                                                                          | 🇨🇿 National Library of the Czech Republic          | [cz](/src/archives/cz/cz.js)                | ✅                                                                | ✅                                                                 |
+| [European Union Web Archive](https://op.europa.eu/en/web/euwebarchive)                                                                     | 🇪🇺 European Union                                  | [euwa](/src/archives/euwa/euwa.js)          | ✅                                                                | ✅                                                                 |
+| [Estonian Web Archive](https://veebiarhiiv.digar.ee)                                                                                       | 🇪🇪 National Library of Estonia                     | [ewa](/src/archives/ewa/ewa.js)             | ✅                                                                | ✅                                                                 |
+| [Government of Canada Web Archive](https://webarchiveweb.bac-lac.canada.ca)                                                                | 🇨🇦 Library and Archives Canada                     | [gcwa](/src/gcwa/gcwa.js)                   | ✅                                                                | ✅                                                                 |
+| [Croatian Web Archives (HAW)](https://haw.nsk.hr)                                                                                          | 🇭🇷 National and University Library in Zagreb       | [haw](/src/archives/haw/haw.js)             | ✅                                                                | ✅                                                                 |
+| [Internet Archive (Wayback Machine)](https://web.archive.org)                                                                              | 🇺🇸 Internet Archive                                | [ia](/src/archives/ia/ia.js)                | ✅                                                                | ✅                                                                 |
+| [Icelandic Web Archive (Vefsafn.is)](https://vefsafn.is)                                                                                   | 🇮🇸 National and University Library of Iceland      | [iwa](/src/archives/iwa/iwa.js)             | ✅                                                                | ✅                                                                 |
+| [Library of Congress Web Archive](https://loc.gov/web-archives)                                                                            | 🇺🇸 Library of Congress                             | [loc](/src/archives/loc/loc.js)             | ❌                                                                | ✅                                                                 |
+| [National Library of Ireland Web Archive](https://nli.ie/collections/our-collections/web-archive)                                          | 🇮🇪 National Library of Ireland                     | [nliwa](/src/archives/nliwa/nliwa.js)       | ✅                                                                | ✅                                                                 |
+| [National Library of Medicine](https://archive-it.org/organizations/350)                                                                   | 🇺🇸 National Library of Medicine                    | [nlm](/src/archives/nlm/nlm.js)             | ✅                                                                | ✅                                                                 |
+| [National Records of Scotland Web Archive](https://webarchive.nrscotland.gov.uk)                                                           | 🏴󠁧󠁢󠁳󠁣󠁴󠁿 National Records of Scotland                    | [nrs](/src/archives/nrs/nrs.js)             | ✅                                                                | ✅                                                                 |
+| [New Zealand Web Archive](https://webarchive.natlib.govt.nz)                                                                               | 🇳🇿 National Library of New Zealand                 | [nzwa](/src/archives/nzwa/nzwa.js)          | ✅                                                                | ✅                                                                 |
+| [The Web Archive of Catalonia (Padicat)](https://padicat.cat)                                                                              | 🇪🇸 Library of Catalonia                            | [padicat](/src/archives/padicat/padicat.js) | ✅                                                                | ✅                                                                 |
+| [PRONI Web Archive](https://webarchive.proni.gov.uk)                                                                                       | 🇬🇧 The Public Record Office of Northern Ireland    | [proni](/src/archives/proni/proni.js)       | ✅                                                                | ✅                                                                 |
+| [Smithsonian Institution Archives](https://siarchives.si.edu)                                                                              | 🇺🇸 Smithsonian Libraries and Archives              | [sia](/src/archives/sia/sia.js)             | ✅                                                                | ✅                                                                 |
+| [Spletni Arhiv](https://arhiv.nuk.uni-lj.si)                                                                                               | 🇸🇮 National and University Library of Slovenia     | [slo](/src/archives/slo/slo.js)             | ❌                                                                | ✅                                                                 |
+| [Australia Web Archive (Trove)](https://webarchive.nla.gov.au)                                                                             | 🇦🇺 National Library of Australia                   | [trove](/src/archives/trove/trove.js)       | ❌                                                                | ✅                                                                 |
+| [UK Government Web Archive (UKGWA)](https://nationalarchives.gov.uk/webarchive)                                                            | 🇬🇧 The National Archives                           | [ukgwa](/src/archives/ukgwa/ukgwa.js)       | ✅                                                                | ✅                                                                 |
+| [University of North Texas Web Archives](https://digital.library.unt.edu/explore/collections/untweb)                                       | 🇺🇸 University of North Texas University Libraries  | [untwa](/src/archives/untwa/untwa.js)       | ✅                                                                | ✅                                                                 |
+| [York University Digital Library](https://digital.library.yorku.ca)                                                                        | 🇨🇦 York University Libraries                       | [yudl](/src/archives/yudl/yudl.js)          | ✅                                                                | ✅                                                                 |
+
+### Adding Web Archives
+
+Wasteback Machine can support additional web archives if they meet the following criteria:
+
+1. Support the [Memento Protocol (RFC 7089)](https://datatracker.ietf.org/doc/html/rfc7089).
+2. Support a CDX server API.
+3. Offer replay API endpoints for both:
+    -	Raw content ([see example](https://web.archive.org/web/20131001001332id_/https://www.bbc.co.uk)).
+    -	Navigational toolbars suppressed ([see example](https://web.archive.org/web/20131001001332if_/https://www.bbc.co.uk)).
+
+To request support for an archive that meets these criteria, [submit an issue](https://github.com/overbrowsing/wasteback-machine/issues/new?template=add-new-web-archive.md) using the template.
+
 ## Wasteback Machine CLI
 
-The [Wasteback Machine CLI](/bin/cli.js) lets you easily query web archives, fetch mementos for a given URL and date, and see page size, composition, and estimated emissions using [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview/).
+Wasteback Machine CLI lets you analyse an archived web page to view its size, composition, and estimated emissions using [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) and the [Sustainable Web Design Model](https://sustainablewebdesign.org/estimating-digital-emissions).
 
 ### Quick Start
 
@@ -172,7 +201,7 @@ ________________________________________________________
 MEMENTO INFO
 
   Memento URL:    https://web.archive.org/web/19961112181513if_/https://nytimes.com
-  Web Archive:    Wayback Machine
+  Web Archive:    Internet Archive (Wayback Machine)
   Organisation:   Internet Archive
   Website:        https://web.archive.org
 
@@ -201,19 +230,39 @@ PAGE COMPOSITION
 ________________________________________________________
 ```
 
-## Methodology and Development
+## Credits
 
-Wasteback Machine was developed as part of doctoral research at [The University of Edinburgh’s Institute for Design Informatics](https://designinformatics.org/portfolio-item/wasteback-machine/) and was supported in part by the [EADH (European Association for Digital Humanities)](https://eadh.org/).
+Developed by the [Overbrowsing Research Group](https://overbrowsing.com) at [The University of Edinburgh’s Institute for Design Informatics](https://designinformatics.org/portfolio-item/wasteback-machine), with support in part from the [European Association for Digital Humanities (EADH)](https://eadh.org).
 
-For details of the underlying methodology, assumptions, and limitations, please refer to our paper [DOI 10.1371/journal.pclm.0000767](https://journals.plos.org/climate/article?id=10.1371/journal.pclm.0000767#sec009).
+## Citing
 
-> [!IMPORTANT]
-> Wasteback Machine is provided for informational and research purposes only. The authors make no guarantees about the accuracy of the results and disclaim any liability for their use. Use of Wasteback Machine is subject to the terms of service of each respective web archive.
+Results generated with Wasteback Machine may be freely cited, quoted, analysed, or republished with attribution to 'Wasteback Machine'. No special permission is required for academic, journalistic, or personal use.
 
-## Contributing
+A publication related to this project appeared in the Proceedings of iConference 2026 ([view PDF](https://publicera.kb.se/ir/article/view/64185/51902)). Please cite as:
 
-Contributions are welcome! Please [submit an issue](https://github.com/overbrowsing/wasteback-machine/issues) or a [pull request](https://github.com/overbrowsing/wasteback-machine/pulls).
+> Mahoney, D. (2026). Wasteback Machine: a method for quantitative measurement of the archived web. Information Research an International Electronic Journal, 31 (iConf), 448–464. https://doi.org/10.47989/ir31iConf64185
+
+```bib
+@article{Mahoney_2026,
+  author  = {Mahoney, David},
+  title   = {Wasteback Machine: a method for quantitative measurement of the archived web},
+  journal = {Information Research: An International Electronic Journal},
+  volume  = {31},
+  number  = {iConf},
+  pages   = {448-464},
+  year    = {2026},
+  month   = {Mar},
+  url     = {https://publicera.kb.se/ir/article/view/64185},
+  doi     = {10.47989/ir31iConf64185}
+}
+```
 
 ## Licenses
 
 Wasteback Machine is licensed under [Apache 2.0](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)). For full licensing details, see the [LICENSE](/LICENSE) file.
+
+Use of Wasteback Machine is subject to the terms, policies and licenses of each respective [supported web archive](#supported-web-archives).
+
+## Terms
+
+All results generated by Wasteback Machine are provided "as-is" without warranties of any kind, express or implied, including but not limited to accuracy, completeness, or reliability. The authors and contributors accept no liability for any errors, omissions, or consequences arising from the use of this software or the results it produces.
