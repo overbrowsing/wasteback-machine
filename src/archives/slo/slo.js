@@ -3,12 +3,18 @@ export const slo = {
   id: "slo",
   archive: "Spletni Arhiv",
   archiveOrg: "National and University Library of Slovenia",
+  archiveCountry: "Slovenia",
+  archiveContinent: "Europe",
   archiveUrl: "https://arhiv.nuk.uni-lj.si",
 
-  // Timegate and endpoints
+  // CDX, TimeMap and TimeGate endpoints
+  cdx: "",
+  timemap: "http://arhiv.nuk.uni-lj.si/wayback/timemap/json/${url}",
   timegate: "https://arhiv.nuk.uni-lj.si/wayback/",
-  endpointID: "https://arhiv.nuk.uni-lj.si/wayback/${datetime}id_/${url}",
-  endpointIF: "https://arhiv.nuk.uni-lj.si/wayback/${datetime}if_/${url}",
+
+  // Replay API endpoints
+  endpointID: "https://arhiv.nuk.uni-lj.si/wayback/${datetime}id_/${url}", // Raw content
+  endpointIF: "https://arhiv.nuk.uni-lj.si/wayback/${datetime}if_/${url}", // Navigational toolbars supressed
 
   // Cleaning and filtering rules
   cleaningRules: [

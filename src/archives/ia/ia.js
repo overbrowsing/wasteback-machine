@@ -1,14 +1,20 @@
 export const ia = {
   // Archive metadata
   id: "ia",
-  archive: "Wayback Machine",
+  archive: "Internet Archive (Wayback Machine)",
   archiveOrg: "Internet Archive",
+  archiveCountry: "United States of America",
+  archiveContinent: "North America",
   archiveUrl: "https://web.archive.org",
   
-  // Timegate and endpoints
+  // CDX, TimeMap and TimeGate endpoints
+  cdx: "https://web.archive.org/cdx/search/cdx?url=${url}",
+  timemap: "https://web.archive.org/web/timemap/link/${url}",
   timegate: "https://web.archive.org/web/",
-  endpointID: "https://web.archive.org/web/${datetime}id_/${url}",
-  endpointIF: "https://web.archive.org/web/${datetime}if_/${url}",
+
+  // Replay API endpoints
+  endpointID: "https://web.archive.org/web/${datetime}id_/${url}", // Raw content
+  endpointIF: "https://web.archive.org/web/${datetime}if_/${url}", // Navigational toolbars supressed
 
   // Cleaning and filtering rules
   cleaningRules: [
