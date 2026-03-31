@@ -1,23 +1,23 @@
 {
   "name": "@overbrowsing/wasteback-machine",
-  "version": "2.0.2",
-  "description": "JavaScript library for measuring archived web pages.",
+  "version": "2.0.3",
+  "description": "JavaScript library for analysing archived web pages. ",
   "main": "src/core/wasteback-machine.js",
   "type": "module",
   "scripts": {
     "cli": "node bin/cli.js"
   },
   "keywords": [
-    "web-archives",
     "internet-archive",
+    "memento",
     "wayback-machine",
-    "website-analysis",
-    "webpage-metrics"
+    "web-archives",
+    "website-analysis"
   ],
   "author": "Overbrowsing",
   "license": "Apache-2.0",
   "dependencies": {
-    "jsdom": "^26.1.0",
-    "@tgwf/co2": "^0.16.9"
+    "@tgwf/co2": "^0.18.0",
+    "jsdom": "^26.1.0"
   }
 }
