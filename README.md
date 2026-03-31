@@ -163,8 +163,8 @@ Each supported web archive has a unique web archive ID (🆔) required for API c
 
 Wasteback Machine can support additional web archives if they meet the following criteria:
 
-1. Support the [Memento Protocol (RFC 7089)](https://datatracker.ietf.org/doc/html/rfc7089).
-2. Support a CDX server API.
+1. Provide a CDX server API (required for [`getMementos`](#1-fetch-available-memento-datetimes-getmementos)).
+2. Support the [Memento Protocol (RFC 7089)](https://datatracker.ietf.org/doc/html/rfc7089) (required for [`analyseMemento`](#2-analyse-an-archived-web-page-analysememento)).
 3. Offer replay API endpoints for both:
     -	Raw content ([see example](https://web.archive.org/web/20131001001332id_/https://www.bbc.co.uk)).
     -	Navigational toolbars suppressed ([see example](https://web.archive.org/web/20131001001332if_/https://www.bbc.co.uk)).
@@ -186,7 +186,7 @@ npm run cli
 ### CLI Prompts
 
 ```sh
-1. Enter web archive ID ('help' to list archives or [Enter ↵] = Wayback Machine):
+1. Enter web archive ID ('help' to list archives or [Enter ↵] = Internet Archive (Wayback Machine)):
 2. Enter URL to analyse:
 3. Enter target year (YYYY):
 4. Enter target month (MM or [Enter ↵] = 01):
