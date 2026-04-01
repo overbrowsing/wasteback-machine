@@ -10,13 +10,13 @@ Wasteback Machine is a JavaScript library for analysing archived web pages, meas
 
 ## Features
 
-- **Archive-agnostic:** [Supports 20+ web archives](#supported-web-archives) and is extensible to additional archives that meet the [supporting criteria](#adding-web-archives).
-- **Memento aggregator:** Retrieve available memento-datetimes for a target URL from a supported archive’s CDX server.
-- **Page composition analysis:** Analyse an archived web page to break down its content by resource type, including HTML, stylesheets, scripts, images, fonts and more.
-- **Total and per-category size measurement:** Calculate both per-resource-category and total page size metrics, including counts and total bytes.
-- **Resource inventory:** Optionally produce a structured inventory of all resources, capturing metadata such as URL, type and byte size.
-- **Completeness scoring:** Determine how fully an archived web page and its resources were retrieved by Wasteback Machine.
-- **CLI utility:** Query web archives, analyse an archived web page and report page composition and size [directly from the command line](#wasteback-machine-cli).
+- **Archive-agnostic:** [Supports 20+ web archives](#supported-web-archives) and is [extensible to additional archives](#adding-web-archives).
+- **Aggregate mementos:** Retrieve memento-datetimes for a target URL from an archive’s CDX server.
+- **Analyse page composition:** Break down archived web pages by resource type, including HTML, stylesheets, scripts, images, etc.
+- **Calculate size metrics:** Compute total and per-type sizes, including counts and bytes.
+- **Generate resource inventory:** Optionally produce an inventory of all resources with metadata.
+- **Completeness scoring:** Assess how fully an archived web page was retrieved.
+- **CLI utility:** Query archives and analyse archived web pages [directly from the command line](#wasteback-machine-cli).
 
 ## Installation
 
@@ -30,8 +30,8 @@ npm i @overbrowsing/wasteback-machine
 
 Wasteback Machine provides two functions:
 
-- **`getMementos`**: Fetch all memento-datetimes from the CDX server of a [supported web archive](#supported-web-archives) for a given URL.
-- **`analyseMemento`**: Analyses the size and composition of an archived web page from a [supported web archive](#supported-web-archives).
+1. **`getMementos`**: Fetch all memento-datetimes from the CDX server of a [supported web archive](#supported-web-archives) for a given URL.
+2. **`analyseMemento`**: Analyses the size and composition of an archived web page from a [supported web archive](#supported-web-archives).
 
 ### 1. Fetch Available Memento-datetimes (`getMementos`)
 
