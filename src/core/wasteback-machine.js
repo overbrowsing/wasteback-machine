@@ -220,7 +220,7 @@ export async function analyseMemento(archiveId, url, datetime, options = {}) {
   const { includeResources = false } = options;
   const archive = resolveArchives(archiveId)[0];
 
-  // If not analysing an exact memento-datetime from the CDX, fetch memento using TimeGate
+  // If not analysing an exact memento-datetime from the CDX, fetch memento using TimeGate (URI-G)
   let actualDatetime = (datetime.replace(/\D/g, "") + "0101000000").slice(0, 14);
 
   if (datetime.length < 14 && archive.timegate && !archive.skipTimeGate) {
