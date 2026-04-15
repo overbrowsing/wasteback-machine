@@ -16,7 +16,7 @@ Wasteback Machine is a JavaScript library for analysing archived web pages, meas
 - **Calculate size metrics:** Compute total and per-type sizes, including counts and bytes.
 - **Generate resource inventory:** Optionally produce an inventory of all resources with metadata.
 - **Completeness scoring:** Assess how fully an archived web page was retrieved.
-- **CLI utility:** Query archives and analyse archived web pages [directly from the command line](#wasteback-machine-cli).
+- **CLI utility:** Analyse archived web pages [directly from the command line](#cli).
 
 ## Installation
 
@@ -26,7 +26,7 @@ To install Wasteback Machine as a dependency for your projects using NPM:
 npm i @overbrowsing/wasteback-machine
 ```
 
-## Functions
+## API
 
 Wasteback Machine provides two functions:
 
@@ -35,7 +35,7 @@ Wasteback Machine provides two functions:
 
 ### 1. Fetch Available Memento-datetimes (`getMementos`)
 
-Fetch all memento-datetimes from the CDX server for https://nytimes.com, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
+Fetch all memento-datetimes for https://nytimes.com, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
 
 ```javascript
 import { getMementos } from "@overbrowsing/wasteback-machine";
@@ -64,7 +64,7 @@ console.log(mementos);
 Analyse the archived snapshot of https://nytimes.com, November 12, 1996, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
 
 > [!TIP]
-> If you provide a full 14-digit datetime (`YYYYMMDDhhmmss`) using the function [`getMementos`](#1-fetch-available-memento-datetimes-getmementos), Wasteback Machine skips the TimeGate (URI-G) lookup, improving performance.
+> If you provide a full 14-digit datetime (`YYYYMMDDhhmmss`) using [`getMementos`](#1-fetch-available-memento-datetimes-getmementos), Wasteback Machine skips the TimeGate (URI-G) lookup, improving performance.
 
 ```javascript
 import { analyseMemento } from "@overbrowsing/wasteback-machine";
@@ -131,7 +131,7 @@ console.log(mementoData);
 
 ## Supported Web Archives
 
-Each supported web archive has a unique web archive ID (🆔) required for API calls. The table also indicates which [functions](#functions) each archive supports.
+Each supported web archive has a unique web archive ID (🆔) required for API calls. The table also indicates which functions each archive supports.
 
 | Web Archive                                                                                                                                | Organisation                                      | 🆔                                           | [`getMementos`](#1-fetch-available-memento-datetimes-getmementos) | [`analyseMemento`](#2-analyse-an-archived-web-page-analysememento) |
 |--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|---------------------------------------------|------------------------------------------------------------------ |---------------------------------------------------------------------|
@@ -171,7 +171,7 @@ Wasteback Machine can support additional web archives if they meet the following
 
 To request support for an archive that meets these criteria, [submit an issue](https://github.com/overbrowsing/wasteback-machine/issues/new?template=add-new-web-archive.md) using the template.
 
-## Wasteback Machine CLI
+## CLI
 
 Wasteback Machine CLI lets you analyse an archived web page to view its size, composition, and estimated emissions using [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview) and the [Sustainable Web Design Model](https://sustainablewebdesign.org/estimating-digital-emissions).
 
