@@ -232,7 +232,7 @@ ________________________________________________________
 
 ## Credits
 
-Developed by the [Overbrowsing Research Group](https://overbrowsing.com) at [The University of Edinburgh’s Institute for Design Informatics](https://designinformatics.org/portfolio-item/wasteback-machine), with support in part from the [European Association for Digital Humanities (EADH)](https://eadh.org).
+Developed by the [Overbrowsing research group](https://overbrowsing.com) at [The University of Edinburgh’s Institute for Design Informatics](https://designinformatics.org/portfolio-item/wasteback-machine), with support in part from the [European Association for Digital Humanities (EADH)](https://eadh.org).
 
 ## Citing
 
