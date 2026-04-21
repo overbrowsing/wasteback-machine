@@ -26,7 +26,7 @@ To install Wasteback Machine as a dependency for your projects using NPM:
 npm i @overbrowsing/wasteback-machine
 ```
 
-## API
+## Usage
 
 Wasteback Machine provides two functions:
 
