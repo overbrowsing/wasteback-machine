@@ -1,8 +1,8 @@
 # Wasteback Machine
 
 [![NPM version](https://img.shields.io/npm/v/@overbrowsing/wasteback-machine.svg)](https://www.npmjs.com/package/@overbrowsing/wasteback-machine)
-[![npm](https://img.shields.io/npm/dt/@overbrowsing/wasteback-machine.svg)](https://www.npmtrends.com/@overbrowsing/wasteback-machine)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github)
+[![npm](https://img.shields.io/npm/dm/@overbrowsing/wasteback-machine.svg)](https://www.npmtrends.com/@overbrowsing/wasteback-machine)
+[![License](https://img.shields.io/npm/l/@overbrowsing/wasteback-machine.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
 ## What is Wasteback Machine?
 
@@ -10,7 +10,7 @@ Wasteback Machine is a JavaScript library for analysing archived web pages, meas
 
 ## Features
 
-- **Archive-agnostic:** [Supports 20+ web archives](#supported-web-archives) and is [extensible to additional archives](#adding-web-archives).
+- **Multi-archive support:** [Supports 20+ web archives](#supported-web-archives) and is [extensible to additional archives](#adding-web-archives).
 - **Aggregate mementos:** Retrieve memento-datetimes for a target URL from an archive’s CDX server.
 - **Analyse page composition:** Break down archived web pages by resource type, including HTML, stylesheets, scripts, images, etc.
 - **Calculate size metrics:** Compute total and per-type sizes, including counts and bytes.
@@ -35,29 +35,29 @@ Wasteback Machine provides two functions:
 
 ### 1. Fetch Available Memento-datetimes (`getMementos`)
 
-Fetch all memento-datetimes for https://nytimes.com, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
+  Fetch all memento-datetimes for https://nytimes.com, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
 
-```javascript
-import { getMementos } from "@overbrowsing/wasteback-machine";
+  ```javascript
+  import { getMementos } from "@overbrowsing/wasteback-machine";
 
-const mementos = await getMementos(
-  "ia", // Web archive ID (🆔 = ia, Internet Archive)
-  "https://nytimes.com", // Target URL
-);
+  const mementos = await getMementos(
+    "ia", // Web archive ID (🆔 = ia, Internet Archive)
+    "https://nytimes.com", // Target URL
+  );
 
-console.log(mementos);
-```
+  console.log(mementos);
+  ```
 
-#### Example Output
+  #### Example Output
 
-```javascript
-[
-  '19961112181513', '19961121230155', '19961219002950', '19961220073509',
-  '19961226135029', '19961228014508', '19961230230427', '19970209220858',
-  '19970303103041', '19970414192930', '19970414210143', '19970415180120',
-  ... 688983 more items
-]
-```
+  ```javascript
+  [
+    '19961112181513', '19961121230155', '19961219002950', '19961220073509',
+    '19961226135029', '19961228014508', '19961230230427', '19970209220858',
+    '19970303103041', '19970414192930', '19970414210143', '19970415180120',
+    ... 688983 more items
+  ]
+  ```
 
 ### 2. Analyse An Archived Web Page (`analyseMemento`)
 
@@ -134,30 +134,31 @@ console.log(mementoData);
 Each supported web archive has a unique web archive ID (🆔) required for API calls. The table also indicates which functions each archive supports.
 
 | Web Archive                                                                                                                                | Organisation                                      | 🆔                                           | [`getMementos`](#1-fetch-available-memento-datetimes-getmementos) | [`analyseMemento`](#2-analyse-an-archived-web-page-analysememento) |
-|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|---------------------------------------------|------------------------------------------------------------------ |---------------------------------------------------------------------|
-| [Arquivo.pt](https://arquivo.pt)                                                                                                           | 🇵🇹 FCCN/FCT                                        | [arq](/src/archives/arq/arq.js)             | ✅                                                                | ✅                                                                  |
-| [National Library and Archives of Quebec (BAnQ) Web Archiving](https://www2.banq.qc.ca/collections/collections_patrimoniales/archives_web) | 🇨🇦 National Library and Archives of Quebec (BAnQ)  | [banq](/src/archives/banq/banq.js)          | ❌                                                                | ✅                                                                  |
-| [Columbia University Libraries Web Archives](https://library.columbia.edu/collections/web-archives)                                        | 🇺🇸 Columbia University Libraries                   | [cul](/src/archives/cul/cul.js)             | ✅                                                                | ✅                                                                  |
-| [Webarchiv](https://webarchiv.cz)                                                                                                          | 🇨🇿 National Library of the Czech Republic          | [cz](/src/archives/cz/cz.js)                | ✅                                                                | ✅                                                                  |
-| [European Union Web Archive](https://op.europa.eu/en/web/euwebarchive)                                                                     | 🇪🇺 European Union                                  | [euwa](/src/archives/euwa/euwa.js)          | ✅                                                                | ✅                                                                  |
-| [Estonian Web Archive](https://veebiarhiiv.digar.ee)                                                                                       | 🇪🇪 National Library of Estonia                     | [ewa](/src/archives/ewa/ewa.js)             | ✅                                                                | ✅                                                                  |
-| [Government of Canada Web Archive](https://webarchiveweb.bac-lac.canada.ca)                                                                | 🇨🇦 Library and Archives Canada                     | [gcwa](/src/archives/gcwa/gcwa.js)          | ✅                                                                | ✅                                                                  |
-| [Croatian Web Archives (HAW)](https://haw.nsk.hr)                                                                                          | 🇭🇷 National and University Library in Zagreb       | [haw](/src/archives/haw/haw.js)             | ✅                                                                | ✅                                                                  |
-| [Internet Archive (Wayback Machine)](https://web.archive.org)                                                                              | 🇺🇸 Internet Archive                                | [ia](/src/archives/ia/ia.js)                | ✅                                                                | ✅                                                                  |
-| [Icelandic Web Archive (Vefsafn.is)](https://vefsafn.is)                                                                                   | 🇮🇸 National and University Library of Iceland      | [iwa](/src/archives/iwa/iwa.js)             | ✅                                                                | ✅                                                                  |
-| [Library of Congress Web Archive](https://loc.gov/web-archives)                                                                            | 🇺🇸 Library of Congress                             | [loc](/src/archives/loc/loc.js)             | ❌                                                                | ✅                                                                  |
-| [National Library of Ireland Web Archive](https://nli.ie/collections/our-collections/web-archive)                                          | 🇮🇪 National Library of Ireland                     | [nliwa](/src/archives/nliwa/nliwa.js)       | ✅                                                                | ✅                                                                  |
-| [National Library of Medicine](https://archive-it.org/organizations/350)                                                                   | 🇺🇸 National Library of Medicine                    | [nlm](/src/archives/nlm/nlm.js)             | ✅                                                                | ✅                                                                  |
-| [National Records of Scotland Web Archive](https://webarchive.nrscotland.gov.uk)                                                           | 🏴󠁧󠁢󠁳󠁣󠁴󠁿 National Records of Scotland                    | [nrs](/src/archives/nrs/nrs.js)             | ✅                                                                | ✅                                                                  |
-| [New Zealand Web Archive](https://webarchive.natlib.govt.nz)                                                                               | 🇳🇿 National Library of New Zealand                 | [nzwa](/src/archives/nzwa/nzwa.js)          | ✅                                                                | ✅                                                                  |
-| [The Web Archive of Catalonia (Padicat)](https://padicat.cat)                                                                              | 🇪🇸 Library of Catalonia                            | [padicat](/src/archives/padicat/padicat.js) | ✅                                                                | ✅                                                                  |
-| [PRONI Web Archive](https://webarchive.proni.gov.uk)                                                                                       | 🇬🇧 The Public Record Office of Northern Ireland    | [proni](/src/archives/proni/proni.js)       | ✅                                                                | ✅                                                                  |
-| [Smithsonian Institution Archives](https://siarchives.si.edu)                                                                              | 🇺🇸 Smithsonian Libraries and Archives              | [sia](/src/archives/sia/sia.js)             | ✅                                                                | ✅                                                                  |
-| [Spletni Arhiv](https://arhiv.nuk.uni-lj.si)                                                                                               | 🇸🇮 National and University Library of Slovenia     | [slo](/src/archives/slo/slo.js)             | ❌                                                                | ✅                                                                  |
-| [Australia Web Archive (Trove)](https://webarchive.nla.gov.au)                                                                             | 🇦🇺 National Library of Australia                   | [trove](/src/archives/trove/trove.js)       | ❌                                                                | ✅                                                                  |
-| [UK Government Web Archive (UKGWA)](https://nationalarchives.gov.uk/webarchive)                                                            | 🇬🇧 The National Archives                           | [ukgwa](/src/archives/ukgwa/ukgwa.js)       | ✅                                                                | ✅                                                                  |
-| [University of North Texas Web Archives](https://digital.library.unt.edu/explore/collections/untweb)                                       | 🇺🇸 University of North Texas University Libraries  | [untwa](/src/archives/untwa/untwa.js)       | ✅                                                                | ✅                                                                  |
-| [York University Digital Library](https://digital.library.yorku.ca)                                                                        | 🇨🇦 York University Libraries                       | [yudl](/src/archives/yudl/yudl.js)          | ✅                                                                | ✅                                                                  |
+|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|---------------------------------------------|------------------------------------------------------------------ |--------------------------------------------------------------------|
+| [Arquivo.pt](https://arquivo.pt)                                                                                                           | 🇵🇹 FCCN/FCT                                        | [arq](/src/archives/arq/arq.js)             | ✓                                                                | ✓                                                                  |
+| [National Library and Archives of Quebec (BAnQ) Web Archiving](https://www2.banq.qc.ca/collections/collections_patrimoniales/archives_web) | 🇨🇦 National Library and Archives of Quebec (BAnQ)  | [banq](/src/archives/banq/banq.js)          | ✕                                                                | ✓                                                                  |
+| [Columbia University Libraries Web Archives](https://library.columbia.edu/collections/web-archives)                                        | 🇺🇸 Columbia University Libraries                   | [cul](/src/archives/cul/cul.js)             | ✓                                                                | ✓                                                                  |
+| [Webarchiv](https://webarchiv.cz)                                                                                                          | 🇨🇿 National Library of the Czech Republic          | [cz](/src/archives/cz/cz.js)                | ✓                                                                | ✓                                                                  |
+| [European Union Web Archive](https://op.europa.eu/en/web/euwebarchive)                                                                     | 🇪🇺 European Union                                  | [euwa](/src/archives/euwa/euwa.js)          | ✓                                                                | ✓                                                                  |
+| [Estonian Web Archive](https://veebiarhiiv.digar.ee)                                                                                       | 🇪🇪 National Library of Estonia                     | [ewa](/src/archives/ewa/ewa.js)             | ✓                                                                | ✓                                                                  |
+| [Government of Canada Web Archive](https://webarchiveweb.bac-lac.canada.ca)                                                                | 🇨🇦 Library and Archives Canada                     | [gcwa](/src/archives/gcwa/gcwa.js)          | ✓                                                                | ✓                                                                  |
+| [Croatian Web Archives (HAW)](https://haw.nsk.hr)                                                                                          | 🇭🇷 National and University Library in Zagreb       | [haw](/src/archives/haw/haw.js)             | ✓                                                                | ✓                                                                  |
+| [Internet Archive (Wayback Machine)](https://web.archive.org)                                                                              | 🇺🇸 Internet Archive                                | [ia](/src/archives/ia/ia.js)                | ✓                                                                | ✓                                                                  |
+| [Icelandic Web Archive (Vefsafn.is)](https://vefsafn.is)                                                                                   | 🇮🇸 National and University Library of Iceland      | [iwa](/src/archives/iwa/iwa.js)             | ✓                                                                | ✓                                                                  |
+| [Library of Congress Web Archive](https://loc.gov/web-archives)                                                                            | 🇺🇸 Library of Congress                             | [loc](/src/archives/loc/loc.js)             | ✕                                                                | ✓                                                                  |
+| [National Library of Ireland Web Archive](https://nli.ie/collections/our-collections/web-archive)                                          | 🇮🇪 National Library of Ireland                     | [nliwa](/src/archives/nliwa/nliwa.js)       | ✓                                                                | ✓                                                                  |
+| [National Library of Medicine](https://archive-it.org/organizations/350)                                                                   | 🇺🇸 National Library of Medicine                    | [nlm](/src/archives/nlm/nlm.js)             | ✓                                                                | ✓                                                                  |
+| [National Records of Scotland Web Archive](https://webarchive.nrscotland.gov.uk)                                                           | 🏴󠁧󠁢󠁳󠁣󠁴󠁿 National Records of Scotland                    | [nrs](/src/archives/nrs/nrs.js)             | ✓                                                                | ✓                                                                  |
+| [Norwegian Web Archive](https://nb.no/en/collection/web-archive)                                                                           | 🇳🇴 National Library of Norway                      | [nwa](/src/archives/nwa/nwa.js)             | ✓                                                                | ✓                                                                  |
+| [New Zealand Web Archive](https://webarchive.natlib.govt.nz)                                                                               | 🇳🇿 National Library of New Zealand                 | [nzwa](/src/archives/nzwa/nzwa.js)          | ✓                                                                | ✓                                                                  |
+| [The Web Archive of Catalonia (Padicat)](https://padicat.cat)                                                                              | 🇪🇸 Library of Catalonia                            | [padicat](/src/archives/padicat/padicat.js) | ✓                                                                | ✓                                                                  |
+| [PRONI Web Archive](https://webarchive.proni.gov.uk)                                                                                       | 🇬🇧 The Public Record Office of Northern Ireland    | [proni](/src/archives/proni/proni.js)       | ✓                                                                | ✓                                                                  |
+| [Smithsonian Institution Archives](https://siarchives.si.edu)                                                                              | 🇺🇸 Smithsonian Libraries and Archives              | [sia](/src/archives/sia/sia.js)             | ✓                                                                | ✓                                                                  |
+| [Spletni Arhiv](https://arhiv.nuk.uni-lj.si)                                                                                               | 🇸🇮 National and University Library of Slovenia     | [slo](/src/archives/slo/slo.js)             | ✕                                                                | ✓                                                                  |
+| [Australia Web Archive (Trove)](https://webarchive.nla.gov.au)                                                                             | 🇦🇺 National Library of Australia                   | [trove](/src/archives/trove/trove.js)       | ✕                                                                | ✓                                                                  |
+| [UK Government Web Archive (UKGWA)](https://nationalarchives.gov.uk/webarchive)                                                            | 🇬🇧 The National Archives                           | [ukgwa](/src/archives/ukgwa/ukgwa.js)       | ✓                                                                | ✓                                                                  |
+| [University of North Texas Web Archives](https://digital.library.unt.edu/explore/collections/untweb)                                       | 🇺🇸 University of North Texas University Libraries  | [untwa](/src/archives/untwa/untwa.js)       | ✓                                                                | ✓                                                                  |
+| [York University Digital Library](https://digital.library.yorku.ca)                                                                        | 🇨🇦 York University Libraries                       | [yudl](/src/archives/yudl/yudl.js)          | ✓                                                                | ✓                                                                  |
 
 ### Adding Web Archives
 
@@ -165,7 +166,7 @@ Wasteback Machine can support additional web archives if they meet the following
 
 1. Provide a CDX server API (required for [`getMementos`](#1-fetch-available-memento-datetimes-getmementos)).
 2. Support the [Memento Protocol (RFC 7089)](https://datatracker.ietf.org/doc/html/rfc7089) (required for [`analyseMemento`](#2-analyse-an-archived-web-page-analysememento)).
-3. Offer replay API endpoints for both:
+3. Support replay state modifiers [(Url Rewrite Type Modifier)](https://pywb.readthedocs.io/en/master/manual/rewriter.html?highlight=modifiers#url-rewrite-type-modifier)) endpoints for both:
     -	Raw content ([see example](https://web.archive.org/web/20131001001332id_/https://www.bbc.co.uk)).
     -	Navigational toolbars suppressed ([see example](https://web.archive.org/web/20131001001332if_/https://www.bbc.co.uk)).
 
