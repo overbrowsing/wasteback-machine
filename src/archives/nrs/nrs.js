@@ -14,7 +14,7 @@ export const nrs = {
 
   // Replay API endpoints
   endpointID: "https://webarchive.nrscotland.gov.uk/${datetime}id_/${url}", // Raw content
-  endpointIF: "https://webarchive.nrscotland.gov.uk/${datetime}np_/${url}", // Navigational toolbars supressed
+  endpointIF: "https://webarchive.nrscotland.gov.uk/${datetime}if_/${url}", // Navigational toolbars supressed
   
   // Cleaning and filtering rules
   cleaningRules: [],
