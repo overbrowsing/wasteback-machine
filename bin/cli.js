@@ -92,12 +92,20 @@ async function spinWhile(promise, message) {
     const targetTimestamp = buildTimestamp(year, monthInput, dayInput);
 
     // Get mementos
+
     const mementos = await spinWhile(
       getMementos(archiveId, url, year, year),
       `Fetching available mementos for ${url} on ${year}-${monthInput}-${dayInput}`
     );
 
-    if (!mementos.length) return console.log("No mementos found.");
+    if (!Array.isArray(mementos)) {
+      console.log(String(mementos));
+      return;
+    }
+    if (!mementos.length) {
+      console.log("No mementos found.");
+      return;
+    }
 
     const closestMemento = mementos.reduce((prev, curr) =>
       Math.abs(curr - targetTimestamp) < Math.abs(prev - targetTimestamp) ? curr : prev
