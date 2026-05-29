@@ -92,7 +92,6 @@ async function spinWhile(promise, message) {
     const targetTimestamp = buildTimestamp(year, monthInput, dayInput);
 
     // Get mementos
-
     const mementos = await spinWhile(
       getMementos(archiveId, url, year, year),
       `Fetching available mementos for ${url} on ${year}-${monthInput}-${dayInput}`
