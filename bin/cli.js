@@ -56,7 +56,7 @@ async function spinWhile(promise, message) {
 
       while (true) {
         const input = (await ask(
-          "1. Enter web archive ID ('help' to list archives or [Enter ↵] = ia): "
+          "1. Enter web archive ID ('help' to list archives or [Enter ↵] = Internet Archive): "
         )).toLowerCase();
 
         if (!input) return "ia";
