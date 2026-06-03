@@ -187,7 +187,7 @@ npm run cli
 ### CLI Prompts
 
 ```sh
-1. Enter web archive ID ('help' to list archives or [Enter ↵] = Internet Archive (Wayback Machine)):
+1. Enter web archive ID ('help' to list archives or [Enter ↵] = Internet Archive):
 2. Enter URL to analyse:
 3. Enter target year (YYYY):
 4. Enter target month (MM or [Enter ↵] = 01):
