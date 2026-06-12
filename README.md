@@ -181,7 +181,7 @@ Wasteback Machine CLI lets you analyse an archived web page to view its size, co
 1. Install dependencies:
 
 ```sh
-npm install
+npm i
 ```
 
 2. Start Wasteback Machine CLI:
