@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/dm/@overbrowsing/wasteback-machine.svg)](https://www.npmtrends.com/@overbrowsing/wasteback-machine)
 [![License](https://img.shields.io/npm/l/@overbrowsing/wasteback-machine.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-## What is Wasteback Machine?
+## Overview
 
 Wasteback Machine is a JavaScript library for analysing archived web pages, measuring their size and composition to enable retrospective, quantitative web research.
 
