@@ -64,7 +64,7 @@ Wasteback Machine provides two functions:
 Analyse the archived snapshot of https://nytimes.com, November 12, 1996, from the Internet Archive [(🆔 = ia)](#supported-web-archives).
 
 > [!TIP]
-> If you provide a full 14-digit datetime (`YYYYMMDDhhmmss`) using [`getMementos`](#1-fetch-available-memento-datetimes-getmementos), Wasteback Machine skips the TimeGate (URI-G) lookup, improving performance.
+> If you provide a full 14-digit datetime (`YYYYMMDDHHMMSS`) using [`getMementos`](#1-fetch-available-memento-datetimes-getmementos), Wasteback Machine skips the TimeGate (URI-G) lookup, improving performance.
 
 ```javascript
 import { analyseMemento } from "@overbrowsing/wasteback-machine";
