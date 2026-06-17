@@ -20,8 +20,6 @@ Wasteback Machine is a JavaScript library for analysing archived web pages, meas
 
 ## Installation
 
-To install Wasteback Machine as a dependency for your projects using NPM:
-
 ```sh
 npm i @overbrowsing/wasteback-machine
 ```
