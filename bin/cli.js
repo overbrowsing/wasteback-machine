@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { getMementos, analyseMemento } from "../src/core/wasteback-machine.js";
 import { archives } from "../src/archives/index.js";
 import readline from "readline";
