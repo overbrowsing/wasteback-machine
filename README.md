@@ -179,7 +179,7 @@ Wasteback Machine CLI lets you analyse an archived web page to view its size, co
 After [installation](#installation), start the CLI:
 
 ```sh
-npm run cli
+npx cli
 ```
 
 ### CLI Prompts
