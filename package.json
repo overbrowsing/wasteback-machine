@@ -13,8 +13,11 @@
   "license": "Apache-2.0",
   "type": "module",
   "main": "src/core/wasteback-machine.js",
+  "bin": {
+    "cli": "./bin/cli.js"
+  },
   "scripts": {
-    "cli": "node bin/cli.js"
+    "cli": "node ./bin/cli.js"
   },
   "dependencies": {
     "@tgwf/co2": "^0.18.0",
