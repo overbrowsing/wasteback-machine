@@ -163,7 +163,7 @@ Each supported web archive has a unique web archive ID (🆔) required for API c
 Wasteback Machine can support additional web archives if they meet the following criteria:
 
 1. Provide a CDX server API (required for [`getMementos`](#1-fetch-available-memento-datetimes-getmementos)).
-2. Support the [Memento Protocol (RFC 7089)](https://datatracker.ietf.org/doc/html/rfc7089) (required for [`analyseMemento`](#2-analyse-an-archived-web-page-analysememento)).
+2. Support the [Memento Protocol (RFC7089)](https://datatracker.ietf.org/doc/html/rfc7089) (required for [`analyseMemento`](#2-analyse-an-archived-web-page-analysememento)).
 3. Support replay state modifiers ([URL Rewrite Type Modifier](https://pywb.readthedocs.io/en/master/manual/rewriter.html?highlight=modifiers#url-rewrite-type-modifier)) endpoints for both:
     -	Raw content ([see example](https://web.archive.org/web/20131001001332id_/https://www.bbc.co.uk)).
     -	Navigational toolbars suppressed ([see example](https://web.archive.org/web/20131001001332if_/https://www.bbc.co.uk)).
