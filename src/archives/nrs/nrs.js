@@ -8,13 +8,13 @@ export const nrs = {
   archiveUrl: "https://webarchive.nrscotland.gov.uk",
 
   // CDX, TimeMap and TimeGate endpoints
-  cdx: "https://webarchive.nrscotland.gov.uk/cdx?url=${url}",
-  timemap: "https://webarchive.nrscotland.gov.uk/timemap/json/${url}",
-  timegate: "https://webarchive.nrscotland.gov.uk/",
+  cdx: "https://webarchive.nrscotland.gov.uk/public/cdx?url=${url}",
+  timemap: "https://webarchive.nrscotland.gov.uk/public/timemap/json/${url}",
+  timegate: "https://webarchive.nrscotland.gov.uk/public/",
 
   // Replay API endpoints
-  endpointID: "https://webarchive.nrscotland.gov.uk/${datetime}id_/${url}", // Raw content
-  endpointIF: "https://webarchive.nrscotland.gov.uk/${datetime}if_/${url}", // Navigational toolbars supressed
+  endpointID: "https://webarchive.nrscotland.gov.uk/public/${datetime}id_/${url}", // Raw content
+  endpointIF: "https://webarchive.nrscotland.gov.uk/public/${datetime}if_/${url}", // Navigational toolbars supressed
   
   // Cleaning and filtering rules
   cleaningRules: [],
