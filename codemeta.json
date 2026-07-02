@@ -1,0 +1,94 @@
+{
+    "@context": "https://w3id.org/codemeta/3.0",
+    "applicationCategory": "SoftwareSourceCode,SoftwareApplication",
+    "author": [
+        {
+            "affiliation": {
+                "name": "Institute for Design Informatics, The University of Edinburgh, Edinburgh, United Kingdom",
+                "@type": "Organization"
+            },
+            "email": "d.f.mahoney@sms.ed.ac.uk",
+            "familyName": "Mahoney",
+            "givenName": "David",
+            "@id": "https://orcid.org/0009-0003-9880-5404",
+            "@type": "Person"
+        }
+    ],
+    "codeRepository": "https://github.com/overbrowsing/wasteback-machine",
+    "dateCreated": "2025-09-02",
+    "description": "JavaScript library for measuring archived web pages.",
+    "funder": {
+        "name": "EADH",
+        "@type": "Organization"
+    },
+    "identifier": "wasteback-machine",
+    "keywords": [
+        "internet-archive",
+        "memento",
+        "wayback-machine",
+        "web-archives",
+        "website-analysis",
+        "webpage-metrics"
+    ],
+    "license": "https://spdx.org/licenses/Apache-2.0",
+    "name": "wasteback-machine",
+    "programmingLanguage": "JavaScript",
+    "referencePublication": [
+        {
+            "author": [
+                {
+                    "affiliation": {
+                        "name": "Institute for Design Informatics, The University of Edinburgh, Edinburgh, United Kingdom ",
+                        "@type": "Organization"
+                    },
+                    "email": "d.f.mahoney@sms.ed.ac.uk",
+                    "familyName": "Mahoney",
+                    "givenName": "David",
+                    "@id": "https://orcid.org/0009-0003-9880-5404",
+                    "@type": "Person"
+                },
+                {
+                    "affiliation": {
+                        "name": " Institute for Design Informatics, The University of Edinburgh, Edinburgh, United Kingdom ",
+                        "@type": "Organization"
+                    },
+                    "familyName": "Terras",
+                    "givenName": "Melissa",
+                    "@id": "https://orcid.org/0000-0001-6496-3197",
+                    "@type": "Person"
+                },
+                {
+                    "affiliation": {
+                        "name": " Institute for Design Informatics, The University of Edinburgh, Edinburgh, United Kingdom ",
+                        "@type": "Organization"
+                    },
+                    "familyName": "Lee",
+                    "givenName": "John",
+                    "@id": "https://orcid.org/0000-0002-0914-2975",
+                    "@type": "Person"
+                },
+                {
+                    "affiliation": {
+                        "name": " Institute for Design Informatics, The University of Edinburgh, Edinburgh, United Kingdom ",
+                        "@type": "Organization"
+                    },
+                    "familyName": "Zeller",
+                    "givenName": "Frauke",
+                    "@id": "https://orcid.org/0000-0001-6835-2529",
+                    "@type": "Person"
+                }
+            ],
+            "datePublished": "2025-11-11",
+            "identifier": "10.1371/journal.pclm.0000767",
+            "name": "Sustainable Web Design: Policy Recommendations for Mitigating the Environmental Impact of United Nations' Websites",
+            "url": "https://doi.org/10.1371/journal.pclm.0000767",
+            "@type": "ScholarlyArticle"
+        }
+    ],
+    "softwareRequirements": [
+        "jsdom@^26.1.0",
+        "@tgwf/co2@^0.16.9"
+    ],
+    "issueTracker": "https://github.com/overbrowsing/wasteback-machine/issues",
+    "@type": "SoftwareSourceCode"
+}
